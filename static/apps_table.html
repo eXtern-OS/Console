@@ -1,0 +1,14 @@
+{{ define "apps_table"}}
+    <tr>
+        <td>{{.app_name}}</td>
+        <td><img src="{{.app_icon_url}}" class="product-img" alt="product img" height="110" width="110"></td>
+        <td>{{.app_downloads_count}}</td>
+        <td>$ {{.app_revenue}}</td>
+        <td>{{.app_version}}</td>
+        <td>
+            <div class="progress shadow" style="height: 3px;">
+                <div class="progress-bar" role="progressbar" style="width: {{.app_rating_width}}%"></div>
+            </div>
+        </td>
+    </tr>
+{{ end }}
