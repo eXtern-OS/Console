@@ -357,7 +357,7 @@
                    </tr>
                    </thead>
                    <tbody>
-                   {{ template "apps_table"}}
+                   {{ .apps_table}}
                  </tbody></table>
                </div>
 	   </div>
@@ -554,6 +554,64 @@
       });
   </script>
 
+
+<script>
+    function getResponse(){
+        return {
+            "content": [
+                {
+                    "App Name": "abc",
+                    "App Icon url": "abc.com",
+                    "App Downloads Count": "15",
+                    "App Revenur": "12$",
+                    "App Version": "v2.3"
+                },
+                {
+                    "App Name": "def",
+                    "App Icon url": "def.com",
+                    "App Downloads Count": "17",
+                    "App Revenur": "142$",
+                    "App Version": "v1.2.3"
+                },
+                {
+                    "App Name": "externOS",
+                    "App Icon url": "externOS.com",
+                    "App Downloads Count": "1702",
+                    "App Revenur": "100$",
+                    "App Version": "v0.0.3"
+                }
+            ]
+        }
+    }
+
+    function addDynamicRows(){
+        const table = document.getElementById("appTable");
+        const progress_div = "<div class='progress shadow' style='...'>" +
+            "<div class='progress-bar' role='progressbar' style='...></div>" +
+            "</div>"
+        let resp = getResponse();
+        resp["content"].forEach(function(item, index){
+            let row = table.insertRow();
+            let name = row.insertCell();
+            let img = row.insertCell();
+            let count = row.insertCell();
+            let revenue = row.insertCell();
+            let version = row.insertCell();
+            let progress_bar = row.insertCell();
+
+            name.innerHTML = item["App Name"];
+            img.innerHTML = "<img src='" + item["App Icon url"] + "' class='product-img' alt='product img' height='110' width='110'>"
+            count.innerHTML = item["App Downloads Count"];
+            revenue.innerHTML = item["App Revenue"];
+            version.innerHTML = item["App Version"];
+            progress_bar.innerHTML = progress_div;
+        })
+    }
+
+    window.onload = function(){
+        addDynamicRows()
+    }
+</script>
   
 </body>
 </html>

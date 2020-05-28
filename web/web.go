@@ -2,9 +2,29 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
+const tableItem = `
+{{ define "apps_table"}}
+    <tr>
+        <td>$APP_NAME</td>
+        <td><img src="$APP_ICON" class="product-img" alt="product img" height="110" width="110"></td>
+        <td>$APP_DOWNLOADS_COUNT</td>
+        <td>$ $APP_REVENUE</td>
+        <td>$APP_VERSION</td>
+        <td>
+            <div class="progress shadow" style="height: 3px;">
+                <div class="progress-bar" role="progressbar" style="width: $APP_RATING_WIDTH%"></div>
+            </div>
+        </td>
+    </tr>
+{{ end }}`
+
 func RenderIndex() gin.H {
+
+	tabs := strings.ReplaceAll(tableItem, "$APP_NAME", "Photos")
+
 	return gin.H{
 		"name":        "foxclore",
 		"email":       "foxclore@zoho.com",
@@ -70,5 +90,7 @@ func RenderIndex() gin.H {
 		"country_2_change": "+4.6",
 		"country_3_change": "-2.1",
 		"country_4_change": "+3.7",
+
+		"apps_table": tabs,
 	}
 }

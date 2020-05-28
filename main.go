@@ -103,5 +103,16 @@ func main() {
 		}
 	})
 
+	r.Group("/api")
+	r.GET("/apps", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"App Name":            "abc",
+			"App Icon url":        "abc.com",
+			"App Downloads Count": "15",
+			"App Revenur":         "12$",
+			"App Version":         "v2.3",
+		})
+	})
+
 	r.Run()
 }
