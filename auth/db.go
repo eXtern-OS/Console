@@ -50,7 +50,6 @@ func (c *CookiesManager) LoadCookiesManager() {
 		c.m = make(map[string]string)
 		return
 	}
-
 }
 
 func (ex *ExportedManager) Dump() {
