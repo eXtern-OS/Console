@@ -345,7 +345,7 @@
              </div>
 		 </div>
 	       <div class="table-responsive">
-                 <table class="table align-items-center table-flush table-borderless">
+                 <table class="table align-items-center table-flush table-borderless" id="appTable">
                   <thead>
                    <tr>
                      <th>Application</th>
@@ -357,7 +357,7 @@
                    </tr>
                    </thead>
                    <tbody>
-                   {{ .apps_table}}
+
                  </tbody></table>
                </div>
 	   </div>
@@ -563,22 +563,25 @@
                     "App Name": "abc",
                     "App Icon url": "abc.com",
                     "App Downloads Count": "15",
-                    "App Revenur": "12$",
-                    "App Version": "v2.3"
+                    "App Revenue": "12$",
+                    "App Version": "v2.3",
+                    "App length": 60
                 },
                 {
                     "App Name": "def",
                     "App Icon url": "def.com",
                     "App Downloads Count": "17",
-                    "App Revenur": "142$",
-                    "App Version": "v1.2.3"
+                    "App Revenue": "142$",
+                    "App Version": "v1.2.3",
+                    "App length": 30
                 },
                 {
                     "App Name": "externOS",
                     "App Icon url": "externOS.com",
                     "App Downloads Count": "1702",
-                    "App Revenur": "100$",
-                    "App Version": "v0.0.3"
+                    "App Revenue": "100$",
+                    "App Version": "v0.0.3",
+                    "App length": 80
                 }
             ]
         }
@@ -586,9 +589,7 @@
 
     function addDynamicRows(){
         const table = document.getElementById("appTable");
-        const progress_div = "<div class='progress shadow' style='...'>" +
-            "<div class='progress-bar' role='progressbar' style='...></div>" +
-            "</div>"
+
         let resp = getResponse();
         resp["content"].forEach(function(item, index){
             let row = table.insertRow();
@@ -598,6 +599,12 @@
             let revenue = row.insertCell();
             let version = row.insertCell();
             let progress_bar = row.insertCell();
+
+            const progress_div = "<div class='progress shadow' style='height:3px'>" +
+                "<div class='progress-bar' role='progressbar' style='width:" + item["App length"] + "%'></div>" +
+                "</div>"
+
+            row.setAttribute("onclick", "window.location='/app?appId=duckID'");
 
             name.innerHTML = item["App Name"];
             img.innerHTML = "<img src='" + item["App Icon url"] + "' class='product-img' alt='product img' height='110' width='110'>"
@@ -612,6 +619,12 @@
         addDynamicRows()
     }
 </script>
-  
+
+<style>
+    tr:hover {
+        cursor: pointer;
+    }
+</style>
+
 </body>
 </html>

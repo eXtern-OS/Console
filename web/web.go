@@ -94,3 +94,17 @@ func RenderIndex() gin.H {
 		"apps_table": tabs,
 	}
 }
+
+func RenderApplicationPage() gin.H {
+	return gin.H{
+		"app_name":            "Photos",
+		"app_description":     "Photos app for eXternOS",
+		"app_rating":          4.9,
+		"app_rating_width":    95,
+		"total_app_downloads": 1400,
+		"total_app_revenue":   "$10900",
+		"total_app_comments":  600,
+		"top_app_country":     "USA (68%)",
+		"update_type":         "url",
+	}
+}

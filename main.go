@@ -103,13 +103,33 @@ func main() {
 		}
 	})
 
+	r.GET("/app", func(c *gin.Context) {
+		appId := c.DefaultQuery("appId", "")
+
+		if appId == "" {
+			c.Status(http.StatusNotFound)
+			return
+		}
+
+		c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage())
+		return
+	})
+
+	r.GET("/create", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "create_team.html", gin.H{})
+	})
+
+	r.GET("/newApp", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "create_app.html", gin.H{})
+	})
+
 	r.Group("/api")
 	r.GET("/apps", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"App Name":            "abc",
 			"App Icon url":        "abc.com",
 			"App Downloads Count": "15",
-			"App Revenur":         "12$",
+			"App Revenue":         "12$",
 			"App Version":         "v2.3",
 		})
 	})
