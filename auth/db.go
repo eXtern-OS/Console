@@ -15,11 +15,11 @@ type DevToken struct {
 	UID string `json:"uid"`
 }
 
-func GetUserIdByEmailAndPassword(email, password string) (bool, string) {
+func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
 	if t, c := db.NewDatabaseCollection("Users", "accounts", "GETUSERBYTOKENID"); t {
 		hash := utils.Makehash(password)
 
-		filter := bson.M{"email": email, "password": hash}
+		filter := bson.M{"login": login, "password": hash}
 
 		var res AMS.Account
 

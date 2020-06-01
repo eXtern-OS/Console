@@ -39,11 +39,11 @@
                     <img src="assets/images/logo-icon.png" alt="logo icon">
                 </div>
                 <div class="card-title text-uppercase text-center py-3">Create a team</div>
-                <form>
-                    <div class="form-group">
+                <form method="post">
+                    <div class="form-group" >
                         <label for="exampleInputName" class="sr-only">Team name</label>
                         <div class="position-relative has-icon-right">
-                            <input type="text" id="exampleInputName" class="form-control input-shadow" placeholder="Enter ur team name">
+                            <input type="text" name="tname" id="exampleInputName" class="form-control input-shadow" placeholder="Enter ur team name">
                             <div class="form-control-position">
                                 <i class="icon-user"></i>
                             </div>
@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmailId" class="sr-only">Contact email</label>
                         <div class="position-relative has-icon-right">
-                            <input type="email" id="exampleInputEmailId" class="form-control input-shadow" placeholder="Enter Your Email">
+                            <input type="email" name="tmail" id="exampleInputEmailId" class="form-control input-shadow" placeholder="Enter Your Email">
                             <div class="form-control-position">
                                 <i class="icon-envelope-open"></i>
                             </div>
@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label for="exampleInputPassword" class="sr-only">Website</label>
                         <div class="position-relative has-icon-right">
-                            <input type="url" id="exampleInputPassword" class="form-control input-shadow" placeholder="Website url">
+                            <input type="url" name="turl" id="exampleInputPassword" class="form-control input-shadow" placeholder="Website url">
                             <div class="form-control-position">
                                 <i class="icon-lock"></i>
                             </div>
@@ -70,7 +70,7 @@
                     <div class="form-group">
                         <label for="exampleInputPassword" class="sr-only">Address</label>
                         <div class="position-relative has-icon-right">
-                            <input type="text" id="exampleInputPassword" class="form-control input-shadow" placeholder="Address (country at least pls)">
+                            <input type="text" name="taddr" id="exampleInputPassword" class="form-control input-shadow" placeholder="Address (country at least pls)">
                             <div class="form-control-position">
                                 <i class="icon-lock"></i>
                             </div>
@@ -80,8 +80,7 @@
 
                     <div class="form-group">
                         <div class="icheck-material-white">
-                            <input type="checkbox" id="user-checkbox" checked="" />
-                            <label for="user-checkbox">I Agree With Terms & Conditions</label>
+                            <label for="user-checkbox">By clicking create you agree with Terms & Conditions</label>
                         </div>
                     </div>
                     <input type="submit" class="btn btn-light btn-block" value="Create">

@@ -62,23 +62,25 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		if tid, err := c.Cookie("devid"); err == nil {
 			log.Println(tid)
-			c.HTML(http.StatusOK, "index.html", web.RenderIndex())
-			return
-		} else {
-			fmt.Println("REDIRECTED", err)
-			c.Redirect(http.StatusTemporaryRedirect, "/login")
-			c.Abort()
-			return
+			if t, uid := auth.AuthenticateCookie(tid); t {
+				if t, _ = publisher.GetPublisherByUID(uid); t {
+					c.HTML(http.StatusOK, "index.html", web.RenderIndex())
+					return
+				} else {
+					c.Redirect(http.StatusTemporaryRedirect, "/create")
+					c.Abort()
+					return
+				}
+			}
 		}
+		fmt.Println("REDIRECTED")
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.Abort()
+		return
 	})
 
 	r.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.html", gin.H{})
-		return
-	})
-
-	r.GET("/register", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "register.html", gin.H{})
 		return
 	})
 
@@ -87,17 +89,30 @@ func main() {
 		password := c.DefaultPostForm("password", "")
 
 		if login == "" || password == "" {
+			log.Println("Empty params")
 			c.HTML(http.StatusOK, "login.html", gin.H{})
 			return
 		}
 
+		log.Println(login, password)
+
 		if t, uid := auth.GetUserIdByEmailAndPassword(login, password); t {
 			c.SetCookie("devid", auth.NewCookie(uid), int(time.Now().Add(12*30*time.Hour).Unix()), "/", "localhost", false, false)
 			log.Println("Set a cookie")
-			c.Redirect(http.StatusFound, "/")
-			c.Abort()
+
+			// Now let's check if he is a verified publisher
+
+			if t, _ := publisher.GetPublisherByUID(uid); t {
+				c.Redirect(http.StatusFound, "/")
+				c.Abort()
+				return
+			} else {
+				c.Redirect(http.StatusFound, "/create")
+				c.Abort()
+			}
 			return
 		} else {
+			log.Println("Error getting auth info")
 			c.HTML(http.StatusOK, "login.html", gin.H{})
 			return
 		}
@@ -117,6 +132,40 @@ func main() {
 
 	r.GET("/create", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "create_team.html", gin.H{})
+		return
+	})
+
+	r.POST("/create", func(c *gin.Context) {
+		tname := c.Request.PostForm.Get("tname")
+		tmail := c.Request.PostForm.Get("tmail")
+		turl := c.Request.PostForm.Get("turl")
+		taddr := c.Request.PostForm.Get("taddr")
+
+		if tname == "" || tmail == "" || turl == "" || taddr == "" {
+			fmt.Println(tname, tmail, turl, taddr)
+			fmt.Println(c.Request.PostForm)
+			c.Redirect(http.StatusFound, "/create")
+			c.Abort()
+			return
+		} else {
+			if tid, err := c.Cookie("devid"); err == nil {
+				log.Println(tid)
+
+				if t, uid := auth.AuthenticateCookie(tid); t {
+					publisher.Create(tname, turl, taddr, tmail, uid)
+					c.Redirect(http.StatusFound, "/")
+					c.Abort()
+					return
+				} else {
+					c.Status(http.StatusBadRequest)
+					return
+				}
+			} else {
+				c.Redirect(http.StatusFound, "/login")
+				c.Abort()
+				return
+			}
+		}
 	})
 
 	r.GET("/newApp", func(c *gin.Context) {
