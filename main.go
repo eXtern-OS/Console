@@ -63,7 +63,7 @@ func main() {
 		if tid, err := c.Cookie("devid"); err == nil {
 			log.Println(tid)
 			if t, uid := auth.AuthenticateCookie(tid); t {
-				if t, _ = publisher.GetPublisherByUID(uid); t {
+				if x, _ := publisher.GetPublisherByUID(uid); x {
 					c.HTML(http.StatusOK, "index.html", web.RenderIndex())
 					return
 				} else {
@@ -136,10 +136,11 @@ func main() {
 	})
 
 	r.POST("/create", func(c *gin.Context) {
-		tname := c.Request.PostForm.Get("tname")
-		tmail := c.Request.PostForm.Get("tmail")
-		turl := c.Request.PostForm.Get("turl")
-		taddr := c.Request.PostForm.Get("taddr")
+
+		tname := c.PostForm("tname")
+		tmail := c.PostForm("tmail")
+		turl := c.PostForm("turl")
+		taddr := c.PostForm("taddr")
 
 		if tname == "" || tmail == "" || turl == "" || taddr == "" {
 			fmt.Println(tname, tmail, turl, taddr)

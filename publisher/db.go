@@ -2,6 +2,7 @@ package publisher
 
 import (
 	"context"
+	"fmt"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -40,9 +41,11 @@ func GetPublisherByUID(uid string) (bool, Publisher) {
 	if t, c := NewDBCollection("publishers", "GETPUBLISHER"); t {
 		filter := bson.M{"maintainers_uids": uid}
 
+		fmt.Println(filter)
+
 		var res Publisher
 
-		return c.FindOne(context.Background(), filter).Decode(res) == nil, res
+		return c.FindOne(context.Background(), filter).Decode(&res) == nil, res
 	} else {
 		return false, Publisher{}
 	}
