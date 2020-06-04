@@ -12,12 +12,14 @@ type CompanyStats struct {
 	TotalRevenue   float64
 	TotalComments  int
 	TotalRatings   float64
+	TotalApps      int
 
 	DownloadsDT map[string]int
 	RevenueDT   map[string]float64
+	RatingsDT   map[string]float64
 	CommentsDT  map[string]int
 
-	Country CountryRec
+	Country CountryStats
 }
 
 func (c *CompanyStats) Load(uid string) {
