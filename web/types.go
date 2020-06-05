@@ -1,6 +1,7 @@
 package web
 
 import (
+	"../app"
 	"../stats"
 	"../utils"
 	"fmt"
@@ -111,7 +112,7 @@ func (c *CSPrepared) Load(cid string, wg *sync.WaitGroup) {
 	TRTc := (cs.TotalRatings - cs.RatingsDT[utils.KeyOffset()]) * 100 / (cs.RatingsDT[utils.KeyOffset()] + 1) //Avoid dividing by zero
 	c.TRTC = fmt.Sprintf("%f", TRTc)
 	if TRTc > 0 {
-		c.TRTW = c.TRTC
+		c.TRTW = strconv.Itoa(int((cs.TotalRatings / 5) * 100))
 		c.AD = "up"
 	} else {
 		c.TRTW = "0"
@@ -151,6 +152,43 @@ func (a *Account) Load(uid string, wg *sync.WaitGroup) {
 		a.Name = acc.Name
 		a.Email = acc.Email
 		a.PicURL = acc.AvatarURL
+	}
+	wg.Done()
+	return
+}
+
+type AppStatsExported struct {
+	AppName         string
+	AppDescription  string
+	AppRating       float64
+	AppRatingWidth  string
+	AppDownloads    int
+	AppRevenue      string
+	AppComments     int
+	ExportedCountry string
+	UpdateType      string
+	ID              string
+}
+
+func (ase *AppStatsExported) Load(appId string, wg *sync.WaitGroup) {
+	if t, application := app.GetAppByID(appId); t {
+		var aas stats.AppAdditionalStats
+		aas.Load(appId)
+		ase.AppName = application.Name
+		ase.AppDescription = application.Description
+		ase.AppRating = application.Rating
+		ase.AppRatingWidth = strconv.Itoa(int((ase.AppRating / 5) * 100))
+		ase.AppRevenue = "$" + fmt.Sprintf("%f", aas.TotalRevenue)
+		ase.AppDownloads = application.Downloads
+		ase.AppComments = len(application.Reviews)
+		tc, tcd := aas.GetTopCountry()
+		ase.ExportedCountry = tc + " (" + strconv.Itoa(int((tcd/(ase.AppDownloads+1))*100)) + "%)"
+		if !application.PaymentType.Free {
+			ase.UpdateType = "file"
+		} else {
+			ase.UpdateType = "url"
+		}
+		ase.ID = application.AppId
 	}
 	wg.Done()
 	return

@@ -25,3 +25,13 @@ type CompanyStats struct {
 func (c *CompanyStats) Load(uid string) {
 
 }
+
+type AppAdditionalStats struct {
+	AppId        string
+	TotalRevenue float64
+	Countries    CountryStats
+}
+
+func (aas *AppAdditionalStats) Load(appid string) {
+
+}

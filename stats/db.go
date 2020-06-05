@@ -158,3 +158,19 @@ func (c *CompanyStats) GetCDDataSorted() (int, int, int, int, int, int, int, int
 
 	return d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12
 }
+
+func (aas *AppAdditionalStats) GetTopCountry() (string, int) {
+	if len(aas.Countries.Total) == 0 {
+		return "", 0
+	}
+
+	keys := make([]string, 0, len(aas.Countries.Total))
+
+	for k := range aas.Countries.Total {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+
+	return keys[0], aas.Countries.Total[keys[0]]
+}

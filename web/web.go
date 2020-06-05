@@ -12,8 +12,8 @@ func RenderIndex(uid, tid string) gin.H {
 	var acc Account
 
 	wg.Add(2)
-	cs.Load(tid, &wg)
-	acc.Load(uid, &wg)
+	go cs.Load(tid, &wg)
+	go acc.Load(uid, &wg)
 	wg.Wait()
 
 	return gin.H{
@@ -84,16 +84,28 @@ func RenderIndex(uid, tid string) gin.H {
 	}
 }
 
-func RenderApplicationPage() gin.H {
+func RenderApplicationPage(appId, uid string) gin.H {
+	var wg sync.WaitGroup
+
+	var acc Account
+	var ase AppStatsExported
+	wg.Add(2)
+	go acc.Load(appId, &wg)
+	go ase.Load(uid, &wg)
+	wg.Wait()
+
 	return gin.H{
-		"app_name":            "Photos",
-		"app_description":     "Photos app for eXternOS",
-		"app_rating":          4.9,
-		"app_rating_width":    95,
-		"total_app_downloads": 1400,
-		"total_app_revenue":   "$10900",
-		"total_app_comments":  600,
-		"top_app_country":     "USA (68%)",
-		"update_type":         "url",
+		"name":                acc.Name,
+		"email":               acc.Email,
+		"profile_url":         acc.PicURL,
+		"app_name":            ase.AppName,
+		"app_description":     ase.AppDescription,
+		"app_rating":          ase.AppRating,
+		"app_rating_width":    ase.AppRatingWidth,
+		"total_app_downloads": ase.AppDownloads,
+		"total_app_revenue":   ase.AppRevenue,
+		"total_app_comments":  ase.AppComments,
+		"top_app_country":     ase.ExportedCountry,
+		"update_type":         ase.UpdateType,
 	}
 }

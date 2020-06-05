@@ -122,12 +122,20 @@ func main() {
 		appId := c.DefaultQuery("appId", "")
 
 		if appId == "" {
-			c.Status(http.StatusNotFound)
+			c.Redirect(http.StatusTemporaryRedirect, "/")
+			c.Abort()
 			return
 		}
-
-		c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage())
+		if cid, err := c.Cookie("devid"); err == nil {
+			if t, uid := auth.AuthenticateCookie(cid); t {
+				c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid))
+				return
+			}
+		}
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.Abort()
 		return
+
 	})
 
 	r.GET("/create", func(c *gin.Context) {
