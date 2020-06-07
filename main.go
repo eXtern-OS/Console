@@ -7,6 +7,7 @@ import (
 	"./web"
 	"encoding/json"
 	"fmt"
+	"github.com/eXtern-OS/AMS"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -22,6 +23,7 @@ type Config struct {
 	BeatrixChannel string `json:"beatrix-channelID"`
 	MongoURI       string `json:"mongo-uri"`
 	CookieSecret   string `json:"cookie_secret"`
+	WebsiteURL     string `json:"host_url"`
 }
 
 func LoadConfig() Config {
@@ -42,8 +44,8 @@ func LoadConfig() Config {
 
 func Init(c Config) {
 	db.Init(c.MongoURI)
-	publisher.Init(c.MongoURI)
 	auth.Init()
+	AMS.Init(c.MongoURI, "")
 	beatrix.Init("CONSOLE", c.BeatrixToken, c.BeatrixChannel)
 }
 
@@ -64,7 +66,7 @@ func main() {
 			log.Println(tid)
 			if t, uid := auth.AuthenticateCookie(tid); t {
 				if x, _ := publisher.GetPublisherByUID(uid); x {
-					c.HTML(http.StatusOK, "index.html", web.RenderIndex())
+					c.HTML(http.StatusOK, "index.html", web.RenderIndex(uid))
 					return
 				} else {
 					c.Redirect(http.StatusTemporaryRedirect, "/create")
@@ -97,7 +99,7 @@ func main() {
 		log.Println(login, password)
 
 		if t, uid := auth.GetUserIdByEmailAndPassword(login, password); t {
-			c.SetCookie("devid", auth.NewCookie(uid), int(time.Now().Add(12*30*time.Hour).Unix()), "/", "localhost", false, false)
+			c.SetCookie("devid", auth.NewCookie(uid), int(time.Now().Add(12*30*time.Hour).Unix()), "/", config.WebsiteURL, false, false)
 			log.Println("Set a cookie")
 
 			// Now let's check if he is a verified publisher
@@ -181,15 +183,21 @@ func main() {
 		c.HTML(http.StatusOK, "create_app.html", gin.H{})
 	})
 
-	r.Group("/api")
 	r.GET("/apps", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"App Name":            "abc",
-			"App Icon url":        "abc.com",
-			"App Downloads Count": "15",
-			"App Revenue":         "12$",
-			"App Version":         "v2.3",
-		})
+		if cid, err := c.Cookie("devid"); err == nil {
+			if t, uid := auth.AuthenticateCookie(cid); t {
+				c.JSON(http.StatusOK, web.RenderApplicationTables(uid))
+				return
+			}
+		}
+		log.Println("Error: failed to get cookie")
+		c.JSON(http.StatusOK, gin.H{})
+	})
+
+	r.GET("/logout", func(c *gin.Context) {
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.Abort()
+		return
 	})
 
 	r.Run()

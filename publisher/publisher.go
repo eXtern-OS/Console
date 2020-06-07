@@ -18,6 +18,7 @@ type Publisher struct {
 	Website         string   `bson:"website"          json:"website"`
 	Verified        bool     `bson:"verified"         json:"verified"`
 	UID             string   `bson:"uid"              json:"uid"`
+	Apps            []string `bson:"apps"             json:"apps"`
 }
 
 func Create(tname, turl, taddr, tmail, uid string) {
@@ -32,7 +33,7 @@ func Create(tname, turl, taddr, tmail, uid string) {
 	p.Verified = false
 	p.UID = utils.Makehash(tname + turl + taddr + tmail + uid + strconv.Itoa(int(time.Now().UnixNano())))
 
-	if t, c := NewDBCollection("publishers", "PUBLISHER/CREATE"); t {
+	if t, c := NewDBCollection("publishers"); t {
 		_, err := c.InsertOne(context.Background(), p)
 
 		if err != nil {
@@ -41,6 +42,5 @@ func Create(tname, turl, taddr, tmail, uid string) {
 		}
 		return
 	}
-
 	return
 }

@@ -2,17 +2,18 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"sync"
 )
 
-func RenderIndex(uid, tid string) gin.H {
+func RenderIndex(uid string) gin.H {
 	var wg sync.WaitGroup
 
 	var cs CSPrepared
 	var acc Account
 
 	wg.Add(2)
-	go cs.Load(tid, &wg)
+	go cs.Load(uid, &wg)
 	go acc.Load(uid, &wg)
 	wg.Wait()
 
@@ -91,7 +92,7 @@ func RenderApplicationPage(appId, uid string) gin.H {
 	var ase AppStatsExported
 	wg.Add(2)
 	go acc.Load(appId, &wg)
-	go ase.Load(uid, &wg)
+	go ase.Load(appId, uid, &wg)
 	wg.Wait()
 
 	return gin.H{
@@ -108,4 +109,11 @@ func RenderApplicationPage(appId, uid string) gin.H {
 		"top_app_country":     ase.ExportedCountry,
 		"update_type":         ase.UpdateType,
 	}
+}
+
+func RenderApplicationTables(uid string) AppTable {
+	log.Println("Requested")
+	var apt AppTable
+	apt.Load(uid)
+	return apt
 }

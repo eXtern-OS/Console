@@ -1,14 +1,27 @@
 package stats
 
 import (
+	"../db"
 	"../utils"
+	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"sort"
 	"time"
 )
 
-func GetCompanyStatsByID() {
-
+func GetCompanyStatsByID(publisherId string) (bool, CompanyStats) {
+	if t, coll := db.NewDatabaseCollection("stats", "company"); t {
+		var res CompanyStats
+		filter := bson.M{"pub_id": publisherId}
+		if err := coll.FindOne(context.Background(), filter).Decode(&res); err == nil {
+			return true, res
+		} else {
+			return false, CompanyStats{}
+		}
+	} else {
+		return false, CompanyStats{}
+	}
 }
 
 func (c *CompanyStats) GetCountriesDataSorted() (string, string, string, string, int, int, int, int, string, string, string, string) {

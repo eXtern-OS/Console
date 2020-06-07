@@ -1,43 +1,22 @@
 package app
 
 import (
+	"../db"
 	"context"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
-	"time"
 )
 
-var URI = ""
+func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
+	return db.NewDatabaseCollection("AppStore", collectionName)
 
-func Init(mongouri string) {
-	URI = mongouri
-}
-
-func NewDBCollection(collectionName, issuer string) (bool, *mongo.Collection) {
-	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
-	if err != nil {
-		log.Println(err)
-		go beatrix.SendError("Error creating client for mongodb", issuer)
-		return false, nil
-	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Println(err)
-		go beatrix.SendError("Error connecting with client to mongodb", issuer)
-		return false, nil
-	}
-
-	collection := client.Database("AppStore").Collection(collectionName)
-	return true, collection
 }
 
 func GetPaidAppURL(id string) (int, string, string) {
-	if t, c := NewDBCollection("apps", "GETPAIDAPPURL"); t {
+	if t, c := NewDBCollection("apps"); t {
 		filter := bson.M{"app_id": id}
 		var result Application
 
@@ -65,7 +44,7 @@ func GetPaidAppURL(id string) (int, string, string) {
 }
 
 func GetAppURL(id string) (bool, string) {
-	if t, c := NewDBCollection("apps", "GETPAIDAPPURL"); t {
+	if t, c := NewDBCollection("apps"); t {
 		filter := bson.M{"app_id": id}
 		var result Application
 
@@ -90,7 +69,7 @@ func GetAppURL(id string) (bool, string) {
 }
 
 func GetAppByID(appid string) (bool, Application) {
-	if t, c := NewDBCollection("apps", "GETAPPBYID"); t {
+	if t, c := NewDBCollection("apps"); t {
 		filter := bson.M{"app_id": appid}
 		var res Application
 		err := c.FindOne(context.Background(), filter).Decode(&res)

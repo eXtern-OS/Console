@@ -25,6 +25,7 @@ type Application struct {
 	Reviews   []review.Review    `bson:"reviews"              json:"reviews"`
 	Tags      []string           `bson:"tags"                 json:"tags"`
 	Category  string             `bson:"category"             json:"category"`
+	Revenue   float64            `bson:"revenue"              json:"revenue"`
 }
 
 type ApplicationOwners struct {

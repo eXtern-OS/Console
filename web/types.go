@@ -2,10 +2,11 @@ package web
 
 import (
 	"../app"
+	"../publisher"
 	"../stats"
 	"../utils"
 	"fmt"
-	"github.com/eXtern-OS/TokenMaster"
+	"github.com/eXtern-OS/AMS"
 	"strconv"
 	"sync"
 )
@@ -82,6 +83,7 @@ func (c *CSPrepared) Load(cid string, wg *sync.WaitGroup) {
 		c.AD, c.AR, c.ART, c.AC = "up", "up", "up", "up"
 		c.C1, c.C2, c.C3, c.C4 = "No data", "No data", "No data", "No data"
 		c.C1C, c.C2C, c.C3C, c.C4C = "No data", "No data", "No data", "No data"
+		c.TD, c.TR, c.TRT, c.TC = "No data", "No data", "No data", "No data"
 		wg.Done()
 		return
 	}
@@ -148,7 +150,7 @@ type Account struct {
 }
 
 func (a *Account) Load(uid string, wg *sync.WaitGroup) {
-	if t, acc := TokenMaster.GetUserByUID(uid); t {
+	if acc := AMS.GetUserByID(uid); acc.UID != "" {
 		a.Name = acc.Name
 		a.Email = acc.Email
 		a.PicURL = acc.AvatarURL
@@ -170,10 +172,10 @@ type AppStatsExported struct {
 	ID              string
 }
 
-func (ase *AppStatsExported) Load(appId string, wg *sync.WaitGroup) {
+func (ase *AppStatsExported) Load(appId, uid string, wg *sync.WaitGroup) {
 	if t, application := app.GetAppByID(appId); t {
 		var aas stats.AppAdditionalStats
-		aas.Load(appId)
+		aas.Load(appId, uid)
 		ase.AppName = application.Name
 		ase.AppDescription = application.Description
 		ase.AppRating = application.Rating
@@ -192,4 +194,39 @@ func (ase *AppStatsExported) Load(appId string, wg *sync.WaitGroup) {
 	}
 	wg.Done()
 	return
+}
+
+type AppTableElement struct {
+	AppName        string `json:"app_name"`
+	IconUrl        string `json:"icon_url"`
+	DownloadsCount string `json:"downloads_count"`
+	Revenue        string `json:"revenue"`
+	LastUpdate     string `json:"last_update"`
+	RatingWidth    string `json:"rating_width"`
+	AppId          string `json:"app_id"`
+}
+
+type AppTable struct {
+	Apps []AppTableElement `json:"apps"`
+}
+
+func (apt *AppTable) Load(uid string) {
+	if t, apps := publisher.GetAppIds(uid); t {
+		if len(apps) != 0 {
+			for _, a := range apps {
+				if t, apx := app.GetAppByID(a); t {
+					var ate AppTableElement
+					ate.AppName = apx.Name
+					ate.IconUrl = apx.IconURL
+					ate.DownloadsCount = strconv.Itoa(apx.Downloads)
+					ate.LastUpdate = apx.Version.CurrentVersion.Version
+					ate.RatingWidth = fmt.Sprintf("%f", (apx.Rating/5)*100)
+					ate.AppId = a
+					ate.Revenue = fmt.Sprintf("%f", apx.Revenue)
+				}
+			}
+		}
+	}
+	return
+
 }

@@ -45,59 +45,22 @@
    <ul class="sidebar-menu do-nicescrol">
       <li class="sidebar-header">MAIN NAVIGATION</li>
       <li>
-        <a href="index.html">
-          <i class="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
+        <a href="/">
+          <i class="zmdi zmdi-view-dashboard active"></i> <span>Dashboard</span>
         </a>
       </li>
 
       <li>
-        <a href="icons.html">
-          <i class="zmdi zmdi-invert-colors"></i> <span>UI Icons</span>
+        <a href="/newApp">
+          <i class="zmdi zmdi-invert-colors"></i> <span>Create applications</span>
         </a>
       </li>
 
       <li>
         <a href="forms.html">
-          <i class="zmdi zmdi-format-list-bulleted"></i> <span>Forms</span>
+          <i class="zmdi zmdi-format-list-bulleted"></i> <span>Company profile</span>
         </a>
       </li>
-
-      <li>
-        <a href="tables.html">
-          <i class="zmdi zmdi-grid"></i> <span>Tables</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="calendar.html">
-          <i class="zmdi zmdi-calendar-check"></i> <span>Calendar</span>
-          <small class="badge float-right badge-light">New</small>
-        </a>
-      </li>
-
-      <li>
-        <a href="profile.html">
-          <i class="zmdi zmdi-face"></i> <span>Profile</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="login.html" target="_blank">
-          <i class="zmdi zmdi-lock"></i> <span>Login</span>
-        </a>
-      </li>
-
-       <li>
-        <a href="register.html" target="_blank">
-          <i class="zmdi zmdi-account-circle"></i> <span>Registration</span>
-        </a>
-      </li>
-
-      <li class="sidebar-header">LABELS</li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-coffee text-danger"></i> <span>Important</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Warning</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Information</span></a></li>
-
     </ul>
    
    </div>
@@ -112,32 +75,11 @@
        <i class="icon-menu menu-icon"></i>
      </a>
     </li>
-    <li class="nav-item">
-      <form class="search-bar">
-        <input type="text" class="form-control" placeholder="Enter keywords">
-         <a href="javascript:void();"><i class="icon-magnifier"></i></a>
-      </form>
-    </li>
+
   </ul>
      
   <ul class="navbar-nav align-items-center right-nav-link">
-    <li class="nav-item dropdown-lg">
-      <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-      <i class="fa fa-envelope-open-o"></i></a>
-    </li>
-    <li class="nav-item dropdown-lg">
-      <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-      <i class="fa fa-bell-o"></i></a>
-    </li>
-    <li class="nav-item language">
-      <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();"><i class="fa fa-flag"></i></a>
-      <ul class="dropdown-menu dropdown-menu-right">
-          <li class="dropdown-item"> <i class="flag-icon flag-icon-gb mr-2"></i> English</li>
-          <li class="dropdown-item"> <i class="flag-icon flag-icon-fr mr-2"></i> French</li>
-          <li class="dropdown-item"> <i class="flag-icon flag-icon-cn mr-2"></i> Chinese</li>
-          <li class="dropdown-item"> <i class="flag-icon flag-icon-de mr-2"></i> German</li>
-        </ul>
-    </li>
+
     <li class="nav-item">
       <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
         <span class="user-profile"><img src="{{.profile_url}}" class="img-circle" alt="user avatar" height="110" width="110"></span>
@@ -154,14 +96,9 @@
            </div>
           </a>
         </li>
+        <li class="dropdown-item" href="/"><i class="icon-settings mr-2" href="/"></i> Company profile</li>
         <li class="dropdown-divider"></li>
-        <li class="dropdown-item"><i class="icon-envelope mr-2"></i> Inbox</li>
-        <li class="dropdown-divider"></li>
-        <li class="dropdown-item"><i class="icon-wallet mr-2"></i> Account</li>
-        <li class="dropdown-divider"></li>
-        <li class="dropdown-item"><i class="icon-settings mr-2"></i> Setting</li>
-        <li class="dropdown-divider"></li>
-        <li class="dropdown-item"><i class="icon-power mr-2"></i> Logout</li>
+        <li class="dropdown-item" href="/logout"><i class="icon-power mr-2" href="/logout"></i> Logout</li>
       </ul>
     </li>
   </ul>
@@ -181,11 +118,11 @@
         <div class="row row-group m-0">
             <div class="col-12 col-lg-6 col-xl-3 border-light">
                 <div class="card-body">
-                  <h5 class="text-white mb-0">{{.total_downloads_count}} <span class="float-right"><i class="fa fa-shopping-cart"></i></span></h5>
+                  <h5 class="text-white mb-0">{{.total_downloads}} <span class="float-right"><i class="fa fa-shopping-cart"></i></span></h5>
                     <div class="progress my-3" style="height:3px;">
                        <div class="progress-bar" style="width:{{.total_downloads_width}}%"></div>
                     </div>
-                  <p class="mb-0 text-white small-font">Monthly downloads <span class="float-right">{{.total_downloads}}% <i class="zmdi zmdi-long-arrow-{{.arrow_downloads}}"></i></span></p>
+                  <p class="mb-0 text-white small-font">Monthly downloads <span class="float-right">{{.total_downloads_change}}% <i class="zmdi zmdi-long-arrow-{{.arrow_downloads}}"></i></span></p>
                 </div>
             </div>
             <div class="col-12 col-lg-6 col-xl-3 border-light">
@@ -251,19 +188,19 @@
 		 <div class="row m-0 row-group text-center border-top border-light-3">
 		   <div class="col-12 col-lg-4">
 		     <div class="p-3">
-		       <h5 class="mb-0">45.87M</h5>
-			   <small class="mb-0">Overall Downloads <span> <i class="fa fa-arrow-{{.arrow_downloads}}"></i> {{.total_downloads}}</span></small>
+		       <h5 class="mb-0">{{.total_downloads}}</h5>
+			   <small class="mb-0">Overall Downloads <span> <i class="fa fa-arrow-{{.arrow_downloads}}"></i> {{.total_downloads_change}}</span></small>
 		     </div>
 		   </div>
 		   <div class="col-12 col-lg-4">
 		     <div class="p-3">
-		       <h5 class="mb-0">4M</h5>
+		       <h5 class="mb-0">{{.total_comments}}</h5>
 			   <small class="mb-0">Total comments <span> <i class="fa fa-arrow-{{.arrow_comments}}"></i> {{.total_comments_change}}</span></small>
 		     </div>
 		   </div>
 		   <div class="col-12 col-lg-4">
 		     <div class="p-3">
-		       <h5 class="mb-0">2300$</h5>
+		       <h5 class="mb-0">{{.total_revenue}}</h5>
 			   <small class="mb-0">Total Revenue <span> <i class="fa fa-arrow-{{.arrow_revenue}}"></i> {{.total_revenue_change}}</span></small>
 		     </div>
 		   </div>
@@ -556,6 +493,20 @@
 
 
 <script>
+    function getData(url,callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('GET', url, true);
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200) {
+                    var obj = JSON.parse(xmlhttp.responseText);
+                    callback(obj);
+                }
+            }
+        };
+        xmlhttp.send(null);
+    }
+
     function getResponse(){
         return {
             "content": [
@@ -590,29 +541,32 @@
     function addDynamicRows(){
         const table = document.getElementById("appTable");
 
-        let resp = getResponse();
-        resp["content"].forEach(function(item, index){
-            let row = table.insertRow();
-            let name = row.insertCell();
-            let img = row.insertCell();
-            let count = row.insertCell();
-            let revenue = row.insertCell();
-            let version = row.insertCell();
-            let progress_bar = row.insertCell();
+        //You can call it like:
+        getData("http://localhost:8080/apps",function (data) {
+            data["content"].forEach(function(item, index){
+                let row = table.insertRow();
+                let name = row.insertCell();
+                let img = row.insertCell();
+                let count = row.insertCell();
+                let revenue = row.insertCell();
+                let version = row.insertCell();
+                let progress_bar = row.insertCell();
 
-            const progress_div = "<div class='progress shadow' style='height:3px'>" +
-                "<div class='progress-bar' role='progressbar' style='width:" + item["App length"] + "%'></div>" +
-                "</div>"
+                const progress_div = "<div class='progress shadow' style='height:3px'>" +
+                    "<div class='progress-bar' role='progressbar' style='width:" + item["rating_width"] + "%'></div>" +
+                    "</div>"
 
-            row.setAttribute("onclick", "window.location='/app?appId=duckID'");
+                row.setAttribute("onclick", "window.location='/app?appId='" + item["app_id"]);
 
-            name.innerHTML = item["App Name"];
-            img.innerHTML = "<img src='" + item["App Icon url"] + "' class='product-img' alt='product img' height='110' width='110'>"
-            count.innerHTML = item["App Downloads Count"];
-            revenue.innerHTML = item["App Revenue"];
-            version.innerHTML = item["App Version"];
-            progress_bar.innerHTML = progress_div;
-        })
+                name.innerHTML = item["app_name"];
+                img.innerHTML = "<img src='" + item["icon_url"] + "' class='product-img' alt='product img' height='110' width='110'>"
+                count.innerHTML = item["downloads_count"];
+                revenue.innerHTML = item["revenue"];
+                version.innerHTML = item["last_update"];
+                progress_bar.innerHTML = progress_div;
+            })
+        });
+
     }
 
     window.onload = function(){

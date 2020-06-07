@@ -16,10 +16,10 @@ type DevToken struct {
 }
 
 func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
-	if t, c := db.NewDatabaseCollection("Users", "accounts", "GETUSERBYTOKENID"); t {
+	if t, c := db.NewDatabaseCollection("Users", "accounts"); t {
 		hash := utils.Makehash(password)
 
-		filter := bson.M{"login": login, "password": hash}
+		filter := bson.M{"email": login, "password": hash}
 
 		var res AMS.Account
 
@@ -34,7 +34,7 @@ func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
 }
 
 func (c *CookiesManager) LoadCookiesManager() {
-	if t, collection := db.NewDBCollection("cookies", "LOADCOOKIESMANAGER"); t {
+	if t, collection := db.NewDBCollection("cookies"); t {
 		filter := bson.M{"index": 0}
 
 		var result ExportedManager
@@ -53,7 +53,7 @@ func (c *CookiesManager) LoadCookiesManager() {
 }
 
 func (ex *ExportedManager) Dump() {
-	if t, collection := db.NewDBCollection("cookies", "EXPORTEDMANAGER.DUMP"); t {
+	if t, collection := db.NewDBCollection("cookies"); t {
 		if _, err := collection.InsertOne(context.Background(), ex); err == nil {
 			return
 		} else {
