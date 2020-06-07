@@ -25,3 +25,7 @@ func NewCookie(uid string) string {
 	C.Write(t, uid)
 	return t
 }
+
+func RemoveCookie(cid string) {
+	C.Remove(cid)
+}

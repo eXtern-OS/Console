@@ -180,7 +180,16 @@ func main() {
 	})
 
 	r.GET("/newApp", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "create_app.html", gin.H{})
+		if tid, err := c.Cookie("devid"); err == nil {
+			log.Println(tid)
+			if t, uid := auth.AuthenticateCookie(tid); t {
+				c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid))
+				return
+			}
+		}
+		c.Redirect(http.StatusFound, "/login")
+		c.Abort()
+		return
 	})
 
 	r.GET("/apps", func(c *gin.Context) {
@@ -195,6 +204,9 @@ func main() {
 	})
 
 	r.GET("/logout", func(c *gin.Context) {
+		if cid, err := c.Cookie("devid"); err == nil {
+			auth.RemoveCookie(cid)
+		}
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 		c.Abort()
 		return

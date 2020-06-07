@@ -34,3 +34,9 @@ func (c *CookiesManager) Dump() ExportedManager {
 	c.mx.RUnlock()
 	return ex
 }
+
+func (c *CookiesManager) Remove(key string) {
+	c.mx.Lock()
+	delete(c.m, key)
+	c.mx.Unlock()
+}

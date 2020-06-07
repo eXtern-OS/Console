@@ -117,3 +117,16 @@ func RenderApplicationTables(uid string) AppTable {
 	apt.Load(uid)
 	return apt
 }
+
+func RenderNewApplication(uid string) gin.H {
+	var acc Account
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go acc.Load(uid, &wg)
+	wg.Wait()
+	return gin.H{
+		"name":        acc.Name,
+		"email":       acc.Email,
+		"profile_url": acc.PicURL,
+	}
+}
