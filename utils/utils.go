@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/sha1"
 	"encoding/base64"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -10,7 +11,13 @@ import (
 func Makehash(data string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(data))
-	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	}
+
+	return reg.ReplaceAllString(base64.URLEncoding.EncodeToString(hasher.Sum(nil)), "")
 }
 
 func KeyOffset() string {

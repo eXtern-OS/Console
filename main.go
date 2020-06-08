@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./app"
 	"./auth"
 	"./db"
 	"./publisher"
@@ -141,7 +142,14 @@ func main() {
 	})
 
 	r.GET("/create", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "create_team.html", gin.H{})
+		if cid, err := c.Cookie("devid"); err == nil {
+			if t, _ := auth.AuthenticateCookie(cid); t {
+				c.HTML(http.StatusOK, "create_team.html", gin.H{})
+				return
+			}
+		}
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.Abort()
 		return
 	})
 
@@ -179,19 +187,6 @@ func main() {
 		}
 	})
 
-	r.GET("/newApp", func(c *gin.Context) {
-		if tid, err := c.Cookie("devid"); err == nil {
-			log.Println(tid)
-			if t, uid := auth.AuthenticateCookie(tid); t {
-				c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid))
-				return
-			}
-		}
-		c.Redirect(http.StatusFound, "/login")
-		c.Abort()
-		return
-	})
-
 	r.GET("/apps", func(c *gin.Context) {
 		if cid, err := c.Cookie("devid"); err == nil {
 			if t, uid := auth.AuthenticateCookie(cid); t {
@@ -208,6 +203,58 @@ func main() {
 			auth.RemoveCookie(cid)
 		}
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.Abort()
+		return
+	})
+
+	r.GET("/newApp", func(c *gin.Context) {
+		if tid, err := c.Cookie("devid"); err == nil {
+			log.Println(tid)
+			if t, uid := auth.AuthenticateCookie(tid); t {
+				c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid))
+				return
+			}
+		}
+		c.Redirect(http.StatusFound, "/login")
+		c.Abort()
+		return
+	})
+
+	r.POST("/newApp", func(c *gin.Context) {
+		if tid, err := c.Cookie("devid"); err == nil {
+			log.Println(tid)
+			if t, _ := auth.AuthenticateCookie(tid); t {
+				appname := c.PostForm("name")
+				appdesc := c.PostForm("description")
+				appicon, errI := c.FormFile("app_icon")
+				appcover, errC := c.FormFile("app_cover")
+				appversion := c.PostForm("app_version")
+				appvdesc := c.PostForm("version_description")
+				appvp, errP := c.FormFile("upload_package")
+				appscreens := c.PostForm("screenshots")
+				apppt := c.PostForm("pt")
+				apppr := c.PostForm("price")
+				apppurl := c.PostForm("package_url")
+
+				app.CreateFreeApp(appname, appdesc, apppurl, appscreens, appversion, appvdesc, appicon, appcover)
+
+				if errI != nil {
+					log.Println("------ERR ICON")
+					log.Println(errI)
+				}
+				if errC != nil {
+					log.Println("------ERR COVER")
+					log.Println(errC)
+				}
+				if errP != nil {
+					log.Println("------ERR PACKAGE")
+					log.Println(errP)
+				}
+				fmt.Println(appname, appdesc, appicon, appcover, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
+				return
+			}
+		}
+		c.Redirect(http.StatusFound, "/login")
 		c.Abort()
 		return
 	})

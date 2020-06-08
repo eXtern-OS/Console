@@ -26,6 +26,8 @@ type Application struct {
 	Tags      []string           `bson:"tags"                 json:"tags"`
 	Category  string             `bson:"category"             json:"category"`
 	Revenue   float64            `bson:"revenue"              json:"revenue"`
+
+	Status string `bson:"status"               json:"status"`
 }
 
 type ApplicationOwners struct {

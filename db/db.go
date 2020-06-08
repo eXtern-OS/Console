@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"github.com/masci/flickr"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -13,7 +14,7 @@ var URI = ""
 
 var Client MongoClient
 
-func Init(mongouri string) {
+func Init(mongouri, fapi, fsecret string) {
 	URI = mongouri
 	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
 	if err != nil {
@@ -27,6 +28,11 @@ func Init(mongouri string) {
 	Client.Mutex.Lock()
 	Client.Client = client
 	Client.Mutex.Unlock()
+
+	fclient := flickr.NewFlickrClient(fapi, fsecret)
+	FClient.Mutex.Lock()
+	FClient.Client = fclient
+	FClient.Mutex.Unlock()
 }
 
 type MongoClient struct {

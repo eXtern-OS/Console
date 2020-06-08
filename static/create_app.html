@@ -135,119 +135,119 @@
                                         </div>
                                     </div>
 
-                                    <form>
+                                    <form method="post" action="/newApp" enctype="multipart/form-data">
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Name</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" placeholder="One of the best apps ever created">
+                                                <input class="form-control" name="name" type="text" placeholder="One of the best apps ever created">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Description</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" placeholder="Once upon a time I met Johny at Alaska, he was fighting a bear, since that...">
+                                                <input class="form-control" name="description" type="text" placeholder="Once upon a time I met Johny at Alaska, he was fighting a bear, since that...">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application icon</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="file">
+                                                <input class="form-control" name="app_icon" type="file">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application cover</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="file">
+                                                <input class="form-control" name="app_cover" type="file">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application version</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="app_version" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Version description</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="version_description" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">URL to the package</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="url" value="">
+                                                <input class="form-control" type="url" name="package_url" value="">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Screenshots (urls separated by space)</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="screenshots" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label"></label>
                                             <div class="col-lg-9">
                                                 <input type="reset" class="btn btn-secondary" value="Cancel">
-                                                <input type="button" class="btn btn-primary" value="Save Changes">
+                                                <input type="submit" class="btn btn-primary" value="Save Changes">
                                             </div>
                                         </div>
                                     </form>
 
                                 </div>
                                 <div class="tab-pane" id="paid">
-                                    <form>
+                                    <form method="post" action="/newApp" enctype="multipart/form-data">
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Name</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" placeholder="One of the best apps ever created">
+                                                <input class="form-control" name="name" type="text" placeholder="One of the best apps ever created">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Description</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" placeholder="Once upon a time I met Johny at Alaska, he was fighting a bear, since that...">
+                                                <input class="form-control" name="description" type="text" placeholder="Once upon a time I met Johny at Alaska, he was fighting a bear, since that...">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application icon</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="file">
+                                                <input class="form-control" name="app_icon" type="file">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application cover</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="file">
+                                                <input class="form-control" name="app_cover" type="file">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Application version</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="app_version" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Version description</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="version_description" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Upload package</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="file" value="">
+                                                <input class="form-control" name="upload_package" type="file" value="">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Screenshots (urls separated by space)</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text">
+                                                <input class="form-control" name="screenshots" type="text">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Payment type</label>
                                             <div class="col-lg-9">
-                                                <select class="form-control" >
+                                                <select class="form-control" name="pt">
                                                     <option value="once">Once</option>
                                                     <option value="fixed">Fixed</option>'
                                                     <option value="subscription">Subscription</option>
@@ -258,14 +258,14 @@
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Price</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="number">
+                                                <input class="form-control" name="price" type="number">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label"></label>
                                             <div class="col-lg-9">
                                                 <input type="reset" class="btn btn-secondary" value="Cancel">
-                                                <input type="button" class="btn btn-primary" value="Submit">
+                                                <input type="submit" class="btn btn-primary" value="Submit">
                                             </div>
                                         </div>
 
