@@ -92,7 +92,7 @@ func RenderApplicationPage(appId, uid string) gin.H {
 	var acc Account
 	var ase AppStatsExported
 	wg.Add(2)
-	go acc.Load(appId, &wg)
+	go acc.Load(uid, &wg)
 	go ase.Load(appId, uid, &wg)
 	wg.Wait()
 

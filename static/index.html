@@ -522,7 +522,7 @@
                     "<div class='progress-bar' role='progressbar' style='width:" + item["rating_width"] + "%'></div>" +
                     "</div>"
 
-                row.setAttribute("onclick", "window.location='/app?appId='" + item["app_id"]);
+                row.setAttribute("onclick", "window.location='/app?appId=" + item["app_id"]+ "'");
 
                 name.innerHTML = item["app_name"];
                 img.innerHTML = "<img src='" + item["icon_url"] + "' class='product-img' alt='product img' height='110' width='110'>"

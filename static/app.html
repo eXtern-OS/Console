@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Dashtreme Admin - Free Dashboard for Bootstrap 4 by Codervent</title>
+    <title>eXternOS Developer's Console</title>
     <!-- loader-->
     <link href="assets/css/pace.min.css" rel="stylesheet"/>
     <script src="assets/js/pace.min.js"></script>
     <!--favicon-->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <!-- Vector CSS -->
+    <link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
     <!-- simplebar CSS-->
     <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
     <!-- Bootstrap core CSS-->
@@ -27,7 +29,7 @@
 
 </head>
 
-<body class="bg-theme bg-theme1">
+<body class="bg-theme bg-theme2">
 
 <!-- start loader -->
 <div id="pageloader-overlay" class="visible incoming"><div class="loader-wrapper-outer"><div class="loader-wrapper-inner" ><div class="loader"></div></div></div></div>
@@ -41,65 +43,34 @@
         <div class="brand-logo">
             <a href="index.html">
                 <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
-                <h5 class="logo-text">Dashtreme Admin</h5>
+                <h5 class="logo-text">Developer's console</h5>
             </a>
         </div>
         <ul class="sidebar-menu do-nicescrol">
             <li class="sidebar-header">MAIN NAVIGATION</li>
-            <li>
-                <a href="index.html">
-                    <i class="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
+            <li class="name">
+                <a href="/" class="name">
+                    <i class="zmdi zmdi-view-dashboard "></i> <span>Dashboard</span>
                 </a>
             </li>
 
             <li>
-                <a href="icons.html">
-                    <i class="zmdi zmdi-invert-colors"></i> <span>UI Icons</span>
+                <a href="/newApp">
+                    <i class="zmdi zmdi-invert-colors"></i> <span>Create applications</span>
                 </a>
             </li>
 
             <li>
                 <a href="forms.html">
-                    <i class="zmdi zmdi-format-list-bulleted"></i> <span>Forms</span>
+                    <i class="zmdi zmdi-format-list-bulleted"></i> <span>Company profile</span>
                 </a>
             </li>
 
-            <li>
-                <a href="tables.html">
-                    <i class="zmdi zmdi-grid"></i> <span>Tables</span>
+            <li class="active">
+                <a href="/app" class="active">
+                    <i class="zmdi zmdi-format-list-bulleted active"></i> <span>Application</span>
                 </a>
             </li>
-
-            <li>
-                <a href="calendar.html">
-                    <i class="zmdi zmdi-calendar-check"></i> <span>Calendar</span>
-                    <small class="badge float-right badge-light">New</small>
-                </a>
-            </li>
-
-            <li>
-                <a href="profile.html">
-                    <i class="zmdi zmdi-face"></i> <span>Profile</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="login.html" target="_blank">
-                    <i class="zmdi zmdi-lock"></i> <span>Login</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="register.html" target="_blank">
-                    <i class="zmdi zmdi-account-circle"></i> <span>Registration</span>
-                </a>
-            </li>
-
-            <li class="sidebar-header">LABELS</li>
-            <li><a href="javaScript:void();"><i class="zmdi zmdi-coffee text-danger"></i> <span>Important</span></a></li>
-            <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Warning</span></a></li>
-            <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Information</span></a></li>
-
         </ul>
 
     </div>
@@ -114,41 +85,20 @@
                         <i class="icon-menu menu-icon"></i>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <form class="search-bar">
-                        <input type="text" class="form-control" placeholder="Enter keywords">
-                        <a href="javascript:void();"><i class="icon-magnifier"></i></a>
-                    </form>
-                </li>
+
             </ul>
 
             <ul class="navbar-nav align-items-center right-nav-link">
-                <li class="nav-item dropdown-lg">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-                        <i class="fa fa-envelope-open-o"></i></a>
-                </li>
-                <li class="nav-item dropdown-lg">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-                        <i class="fa fa-bell-o"></i></a>
-                </li>
-                <li class="nav-item language">
-                    <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();"><i class="fa fa-flag"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li class="dropdown-item"> <i class="flag-icon flag-icon-gb mr-2"></i> English</li>
-                        <li class="dropdown-item"> <i class="flag-icon flag-icon-fr mr-2"></i> French</li>
-                        <li class="dropdown-item"> <i class="flag-icon flag-icon-cn mr-2"></i> Chinese</li>
-                        <li class="dropdown-item"> <i class="flag-icon flag-icon-de mr-2"></i> German</li>
-                    </ul>
-                </li>
+
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
-                        <span class="user-profile"><img src="{{.profile_url}}" class="img-circle" height="110" width="110" alt="user avatar"></span>
+                        <span class="user-profile"><img src="{{.profile_url}}" class="img-circle" alt="user avatar" height="110" width="110"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
                         <li class="dropdown-item user-details">
                             <a href="javaScript:void();">
                                 <div class="media">
-                                    <div class="avatar"><img class="align-self-start mr-3" src="{{.profile_url}}" height="110" width="110" alt="user avatar"></div>
+                                    <div class="avatar"><img class="align-self-start mr-3" src="{{.profile_url}}" alt="user avatar" height="110" width="110"></div>
                                     <div class="media-body">
                                         <h6 class="mt-2 user-title">{{.name}}</h6>
                                         <p class="user-subtitle">{{.email}}</p>
@@ -156,14 +106,9 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="dropdown-item" href="/"><i class="icon-settings mr-2" href="/"></i> <a href="/">Company profile</a></li>
                         <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-envelope mr-2"></i> Inbox</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-wallet mr-2"></i> Account</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-settings mr-2"></i> Setting</li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item"><i class="icon-power mr-2"></i> Logout</li>
+                        <li class="dropdown-item" href="/logout"><i class="icon-power mr-2" href="/logout"></i><a href="/logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -364,49 +309,12 @@
     <footer class="footer">
         <div class="container">
             <div class="text-center">
-                Copyright © 2018 Dashtreme Admin
+                Copyright © 2020 eXternOS Team
             </div>
         </div>
     </footer>
     <!--End footer-->
 
-    <!--start color switcher-->
-    <div class="right-sidebar">
-        <div class="switcher-icon">
-            <i class="zmdi zmdi-settings zmdi-hc-spin"></i>
-        </div>
-        <div class="right-sidebar-content">
-
-            <p class="mb-0">Gaussion Texture</p>
-            <hr>
-
-            <ul class="switcher">
-                <li id="theme1"></li>
-                <li id="theme2"></li>
-                <li id="theme3"></li>
-                <li id="theme4"></li>
-                <li id="theme5"></li>
-                <li id="theme6"></li>
-            </ul>
-
-            <p class="mb-0">Gradient Background</p>
-            <hr>
-
-            <ul class="switcher">
-                <li id="theme7"></li>
-                <li id="theme8"></li>
-                <li id="theme9"></li>
-                <li id="theme10"></li>
-                <li id="theme11"></li>
-                <li id="theme12"></li>
-                <li id="theme13"></li>
-                <li id="theme14"></li>
-                <li id="theme15"></li>
-            </ul>
-
-        </div>
-    </div>
-    <!--end color switcher-->
 
 </div><!--End wrapper-->
 
