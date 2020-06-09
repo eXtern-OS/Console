@@ -4,6 +4,7 @@ import (
 	"../utils"
 	"context"
 	beatrix "github.com/eXtern-OS/Beatrix"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"strconv"
 	"time"
@@ -41,6 +42,21 @@ func Create(tname, turl, taddr, tmail, uid string) {
 			go beatrix.SendError("Error inserting new collection", "PUBLISHER/CREATE")
 		}
 		return
+	}
+	return
+}
+
+func (p *Publisher) Update(appId string) {
+	p.Apps = append(p.Apps, appId)
+	filter := bson.M{"uid": p.UID}
+	update := bson.M{"$set": bson.M{"apps": p.Apps}}
+	if t, c := NewDBCollection("publishers"); t {
+		if _, err := c.UpdateOne(context.Background(), filter, update); err == nil {
+			return
+		} else {
+			log.Println(err)
+			return
+		}
 	}
 	return
 }

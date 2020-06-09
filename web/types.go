@@ -7,6 +7,7 @@ import (
 	"../utils"
 	"fmt"
 	"github.com/eXtern-OS/AMS"
+	"log"
 	"strconv"
 	"sync"
 )
@@ -212,6 +213,7 @@ type AppTable struct {
 
 func (apt *AppTable) Load(uid string) {
 	if t, apps := publisher.GetAppIds(uid); t {
+		log.Println(apps)
 		if len(apps) != 0 {
 			for _, a := range apps {
 				if t, apx := app.GetAppByID(a); t {
@@ -223,10 +225,18 @@ func (apt *AppTable) Load(uid string) {
 					ate.RatingWidth = fmt.Sprintf("%f", (apx.Rating/5)*100)
 					ate.AppId = a
 					ate.Revenue = fmt.Sprintf("%f", apx.Revenue)
+					apt.Apps = append(apt.Apps, ate)
+				} else {
+					log.Println("Skipped")
 				}
 			}
+		} else {
+			log.Println("Is null")
 		}
+	} else {
+		log.Println("T is false")
 	}
+
 	return
 
 }

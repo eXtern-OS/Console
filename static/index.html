@@ -508,7 +508,8 @@
 
         //You can call it like:
         getData("http://localhost:8080/apps",function (data) {
-            data["content"].forEach(function(item, index){
+            console.log(data)
+            data["apps"].forEach(function(item, index){
                 let row = table.insertRow();
                 let name = row.insertCell();
                 let img = row.insertCell();

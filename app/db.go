@@ -83,3 +83,14 @@ func GetAppByID(appid string) (bool, Application) {
 		return false, Application{}
 	}
 }
+
+func (a *Application) Release() {
+	if t, c := NewDBCollection("apps"); t {
+		_, err := c.InsertOne(context.Background(), a)
+		if err != nil {
+			log.Println(err)
+			go beatrix.SendError("Error pushing app to db", "APP.PUSH")
+		}
+	}
+	return
+}

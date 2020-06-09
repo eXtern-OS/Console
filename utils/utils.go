@@ -11,6 +11,13 @@ import (
 func Makehash(data string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(data))
+	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+
+}
+
+func MakeAppHash(data string) string {
+	hasher := sha1.New()
+	hasher.Write([]byte(data))
 
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {

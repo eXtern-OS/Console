@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"github.com/masci/flickr"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -29,10 +28,6 @@ func Init(mongouri, fapi, fsecret string) {
 	Client.Client = client
 	Client.Mutex.Unlock()
 
-	fclient := flickr.NewFlickrClient(fapi, fsecret)
-	FClient.Mutex.Lock()
-	FClient.Client = fclient
-	FClient.Mutex.Unlock()
 }
 
 type MongoClient struct {

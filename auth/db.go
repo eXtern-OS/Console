@@ -4,6 +4,7 @@ import (
 	"../db"
 	"../utils"
 	"context"
+	"fmt"
 	"github.com/eXtern-OS/AMS"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"go.mongodb.org/mongo-driver/bson"
@@ -22,10 +23,12 @@ func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
 		filter := bson.M{"email": login, "password": hash}
 
 		var res AMS.Account
-
-		if c.FindOne(context.Background(), filter).Decode(&res) == nil {
+		fmt.Println(c.Name(), c.Indexes())
+		if err := c.FindOne(context.Background(), filter).Decode(&res); err == nil {
+			log.Println(err)
 			return res.UID != "", res.UID
 		} else {
+			log.Println(err)
 			return false, ""
 		}
 	} else {

@@ -41,9 +41,8 @@ func VerifyPublisherOwnsApp(appid, userid string) bool {
 func GetAppIds(uid string) (bool, []string) {
 	if t, c := db.NewDBCollection("publishers"); t {
 		filter := bson.M{
-			"maintainer_uids": uid,
+			"maintainers_uids": uid,
 		}
-
 		var res Publisher
 		return c.FindOne(context.Background(), filter).Decode(&res) == nil, res.Apps
 	}

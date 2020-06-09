@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"sync"
@@ -115,6 +116,7 @@ func RenderApplicationTables(uid string) AppTable {
 	log.Println("Requested")
 	var apt AppTable
 	apt.Load(uid)
+	fmt.Println(apt)
 	return apt
 }
 

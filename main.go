@@ -25,6 +25,8 @@ type Config struct {
 	MongoURI       string `json:"mongo-uri"`
 	CookieSecret   string `json:"cookie_secret"`
 	WebsiteURL     string `json:"host_url"`
+	FlickrApi      string `json:"flickr-id"`
+	FlickrSecret   string `json:"flickr-secret"`
 }
 
 func LoadConfig() Config {
@@ -44,7 +46,7 @@ func LoadConfig() Config {
 }
 
 func Init(c Config) {
-	db.Init(c.MongoURI)
+	db.Init(c.MongoURI, c.FlickrApi, c.FlickrSecret)
 	auth.Init()
 	AMS.Init(c.MongoURI, "")
 	beatrix.Init("CONSOLE", c.BeatrixToken, c.BeatrixChannel)
@@ -61,6 +63,10 @@ func main() {
 	r.Static("/assets", "./static/assets")
 	store := cookie.NewStore([]byte(config.CookieSecret))
 	r.Use(sessions.Sessions("devsession", store))
+
+	// Those are needed paths for app icons and covers
+	r.Static("/api/images/icons", "/temp/icons")
+	r.Static("/api/images/covers", "/temp/covers")
 
 	r.GET("/", func(c *gin.Context) {
 		if tid, err := c.Cookie("devid"); err == nil {
@@ -223,7 +229,7 @@ func main() {
 	r.POST("/newApp", func(c *gin.Context) {
 		if tid, err := c.Cookie("devid"); err == nil {
 			log.Println(tid)
-			if t, _ := auth.AuthenticateCookie(tid); t {
+			if t, uid := auth.AuthenticateCookie(tid); t {
 				appname := c.PostForm("name")
 				appdesc := c.PostForm("description")
 				appicon, errI := c.FormFile("app_icon")
@@ -236,7 +242,29 @@ func main() {
 				apppr := c.PostForm("price")
 				apppurl := c.PostForm("package_url")
 
-				app.CreateFreeApp(appname, appdesc, apppurl, appscreens, appversion, appvdesc, appicon, appcover)
+				if appname == "" || appdesc == "" || appscreens == "" || appversion == "" || appvdesc == "" {
+					fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
+					log.Println("SOMETHING IS MISSING")
+					c.Redirect(http.StatusTemporaryRedirect, "/newApp")
+					c.Abort()
+					return
+				}
+
+				// App is free
+				if errP != nil {
+					if apppurl == "" {
+						log.Println("APPPURL IS EMPTY", apppurl)
+						c.Redirect(http.StatusTemporaryRedirect, "/newApp")
+						c.Abort()
+						return
+					}
+					app.CreateFreeApp(appname, appdesc, apppurl, appscreens, appversion, appvdesc, uid, appicon, appcover, c)
+					c.Redirect(http.StatusFound, "/")
+					c.Abort()
+					return
+				} else { //App is paid
+					log.Println("Create paid app")
+				}
 
 				if errI != nil {
 					log.Println("------ERR ICON")
@@ -246,11 +274,7 @@ func main() {
 					log.Println("------ERR COVER")
 					log.Println(errC)
 				}
-				if errP != nil {
-					log.Println("------ERR PACKAGE")
-					log.Println(errP)
-				}
-				fmt.Println(appname, appdesc, appicon, appcover, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
+				fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
 				return
 			}
 		}
