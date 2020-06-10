@@ -95,7 +95,7 @@ func RenderApplicationPage(appId, uid, errMsg string) gin.H {
 	wg.Add(2)
 	go acc.Load(uid, &wg)
 	go ase.Load(appId, uid, &wg)
-	if errMsg != "" {
+	if errMsg == "" {
 		hidden = "hidden"
 	}
 	wg.Wait()
@@ -115,6 +115,7 @@ func RenderApplicationPage(appId, uid, errMsg string) gin.H {
 		"update_type":         ase.UpdateType,
 		"hidden":              hidden,
 		"err_msg":             errMsg,
+		"appId":               appId,
 	}
 }
 
@@ -126,15 +127,26 @@ func RenderApplicationTables(uid string) AppTable {
 	return apt
 }
 
-func RenderNewApplication(uid string) gin.H {
+func RenderNewApplication(uid, errMsgFree, errMsgPaid string) gin.H {
 	var acc Account
+	var hiddenPaid, hiddenFree string
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go acc.Load(uid, &wg)
+	if errMsgPaid == "" {
+		hiddenPaid = "hidden"
+	}
+	if errMsgFree == "" {
+		hiddenFree = "hidden"
+	}
 	wg.Wait()
 	return gin.H{
-		"name":        acc.Name,
-		"email":       acc.Email,
-		"profile_url": acc.PicURL,
+		"name":         acc.Name,
+		"email":        acc.Email,
+		"profile_url":  acc.PicURL,
+		"hidden_free":  hiddenFree,
+		"err_msg_free": errMsgFree,
+		"hidden_paid":  hiddenPaid,
+		"err_msg_paid": errMsgPaid,
 	}
 }

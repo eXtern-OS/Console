@@ -217,7 +217,7 @@ func main() {
 		if tid, err := c.Cookie("devid"); err == nil {
 			log.Println(tid)
 			if t, uid := auth.AuthenticateCookie(tid); t {
-				c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid))
+				c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid, "", ""))
 				return
 			}
 		}
@@ -240,10 +240,9 @@ func main() {
 				appscreens := c.PostForm("screenshots")
 				apppt := c.PostForm("pt")
 				apppr := c.PostForm("price")
-				apppurl := c.PostForm("package_url")
 
-				if appname == "" || appdesc == "" || appscreens == "" || appversion == "" || appvdesc == "" {
-					fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
+				if appname == "" || appdesc == "" || appversion == "" || appvdesc == "" {
+					fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr)
 					log.Println("SOMETHING IS MISSING")
 					c.Redirect(http.StatusTemporaryRedirect, "/newApp")
 					c.Abort()
@@ -251,17 +250,23 @@ func main() {
 				}
 
 				// App is free
-				if errP != nil {
-					if apppurl == "" {
-						log.Println("APPPURL IS EMPTY", apppurl)
-						c.Redirect(http.StatusTemporaryRedirect, "/newApp")
+				if apppr == "" {
+					if errP != nil {
+						log.Println("Upload is empty")
+						c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid, "Error uploading file, is it empty?", ""))
 						c.Abort()
 						return
 					}
-					app.CreateFreeApp(appname, appdesc, apppurl, appscreens, appversion, appvdesc, uid, appicon, appcover, c)
-					c.Redirect(http.StatusFound, "/")
-					c.Abort()
-					return
+					resp := app.CreateFreeApp(appname, appdesc, appscreens, appversion, appvdesc, uid, appicon, appcover, appvp, c)
+					if resp != "" {
+						c.HTML(http.StatusOK, "create_app.html", web.RenderNewApplication(uid, resp, ""))
+						c.Abort()
+						return
+					} else {
+						c.Redirect(http.StatusFound, "/")
+						c.Abort()
+						return
+					}
 				} else { //App is paid
 					log.Println("Create paid app")
 				}
@@ -274,7 +279,7 @@ func main() {
 					log.Println("------ERR COVER")
 					log.Println(errC)
 				}
-				fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr, apppurl)
+				fmt.Println(appname, appdesc, appversion, appvdesc, appvp, appscreens, apppt, apppr)
 				return
 			}
 		}
@@ -284,22 +289,36 @@ func main() {
 	})
 
 	r.POST("/pushUpdate", func(c *gin.Context) {
-		if cid, err := c.Cookie("deviud"); err == nil {
+		if cid, err := c.Cookie("devid"); err == nil {
 			if t, uid := auth.AuthenticateCookie(cid); t {
 				appId := c.PostForm("appId")
 				vIndex := c.PostForm("vindex")
 				vDesc := c.PostForm("vdesc")
 				vUp, errU := c.FormFile("vup")
 				if errU != nil {
+					log.Println(errU)
 					c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid, "Error processing file"))
-					c.Abort()
 					return
 				}
 				if publisher.VerifyPublisherOwnsApp(appId, uid) {
-					if app.NewUpdate(uid, appId, vIndex, vDesc, vUp, c) {
-
+					resp := app.NewUpdate(uid, appId, vIndex, vDesc, vUp, c)
+					log.Println(resp)
+					if resp == "" {
+						c.Redirect(http.StatusFound, "/")
+						c.Abort()
+						return
+					} else {
+						c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid, resp))
+						return
 					}
+				} else {
+					c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid, "We can't verify you own this app"))
+					return
 				}
+			} else {
+				c.Redirect(http.StatusTemporaryRedirect, "/login")
+				c.Abort()
+				return
 			}
 		} else {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")

@@ -12,7 +12,6 @@ import (
 
 func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
 	return db.NewDatabaseCollection("AppStore", collectionName)
-
 }
 
 func GetPaidAppURL(id string) (int, string, string) {
@@ -93,4 +92,19 @@ func (a *Application) Release() {
 		}
 	}
 	return
+}
+
+func (a *Application) UpdateDB() bool {
+	if t, c := NewDBCollection("apps"); t {
+		filter := bson.M{"app_id": a.AppId}
+		update := bson.M{"$set": bson.M{"version": a.Version}}
+		r, err := c.UpdateOne(context.Background(), filter, update)
+		log.Println(r, err)
+
+		if err != nil {
+			log.Println(err)
+		}
+		return err == nil
+	}
+	return false
 }

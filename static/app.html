@@ -219,7 +219,7 @@
                                             <span><strong>Error!</strong> {{.err_msg}}</span>
                                         </div>
                                     </div>
-                                    <form action="/pushUpdate" method="post">
+                                    <form action="/pushUpdate" method="post" enctype="multipart/form-data">
 
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Version index</label>
@@ -235,7 +235,7 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label form-control-label">Upload updated</label>
+                                            <label class="col-lg-3 col-form-label form-control-label">Upload update</label>
                                             <div class="col-lg-9">
                                                 <input class="form-control" type="file" name="vup">
                                             </div>

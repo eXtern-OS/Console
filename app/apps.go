@@ -5,6 +5,7 @@ import (
 	"../payment"
 	"../publisher"
 	"../utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"os"
@@ -12,6 +13,10 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+)
+
+const (
+	MB = 1 << 20
 )
 
 func (a *Application) CreateUID() {
@@ -34,22 +39,37 @@ func (a *Application) InitVersions(version, uid, rnotes, paurl string) {
 	return
 }
 
-func (a *Application) MakeSlug() bool {
+func (a *Application) MakeSlugFree() bool {
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {
 		a.Slug = strconv.Itoa(int(time.Now().UnixNano()))
-		return os.MkdirAll(filepath.Join("/packages", a.Slug), os.ModePerm) == nil
+		return os.MkdirAll(filepath.Join("/packages/free", a.Slug), os.ModePerm) == nil
 	}
-	if _, err := os.Stat("/packages/" + reg.ReplaceAllString(a.Name, "")); err == nil {
+	if _, err := os.Stat("/packages/free" + reg.ReplaceAllString(a.Name, "")); err == nil {
 		a.Slug = reg.ReplaceAllString(a.Name, "")
-		return os.MkdirAll(filepath.Join("/packages", a.Slug), os.ModePerm) == nil
+		return os.MkdirAll(filepath.Join("/packages/free", a.Slug), os.ModePerm) == nil
 	} else {
 		a.Slug = strconv.Itoa(int(time.Now().UnixNano()))
-		return os.MkdirAll(filepath.Join("/packages", a.Slug), os.ModePerm) == nil
+		return os.MkdirAll(filepath.Join("/packages/free", a.Slug), os.ModePerm) == nil
 	}
 }
 
-func CreateFreeApp(name, description, package_url, screenshots, app_version, version_description, uid string, appIcon, appCover *multipart.FileHeader, c *gin.Context) {
+func (a *Application) MakeSlugPaid() bool {
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		a.Slug = strconv.Itoa(int(time.Now().UnixNano()))
+		return os.MkdirAll(filepath.Join("/packages/paid", a.Slug), os.ModePerm) == nil
+	}
+	if _, err := os.Stat("/packages/free" + reg.ReplaceAllString(a.Name, "")); err == nil {
+		a.Slug = reg.ReplaceAllString(a.Name, "")
+		return os.MkdirAll(filepath.Join("/packages/paid", a.Slug), os.ModePerm) == nil
+	} else {
+		a.Slug = strconv.Itoa(int(time.Now().UnixNano()))
+		return os.MkdirAll(filepath.Join("/packages/paid", a.Slug), os.ModePerm) == nil
+	}
+}
+
+func CreateFreeApp(name, description, screenshots, appVersion, versionDescription, uid string, appIcon, appCover, packageFile *multipart.FileHeader, c *gin.Context) string {
 	if t, pub := publisher.GetPublisherByUID(uid); t {
 		var a = Application{
 			Name:        name,
@@ -68,24 +88,25 @@ func CreateFreeApp(name, description, package_url, screenshots, app_version, ver
 			Slug:      "",
 		}
 		a.CreateUID()
-		a.InitVersions(app_version, uid, version_description, package_url)
-		a.IconURL = db.UploadImage(appIcon, c, "icons")
-		a.CoverURL = db.UploadImage(appCover, c, "covers")
-		pub.Update(a.AppId)
-		a.Release()
-		return
-	}
-
-}
-
-func NewUpdate(uid, appId, vIndex, vDesc string, vUp *multipart.FileHeader, c *gin.Context) bool {
-	if t, app := GetAppByID(appId); t {
-		if t, p := publisher.GetPublisherByUID(uid); t {
-			var vr VersionRecord
-			vr.AppId = appId
-			vr.Version = vIndex
-			vr.PackageURL = db.UploadFile(vUp, c, app.Slug)
+		if !a.MakeSlugFree() {
+			return "Internal error"
 		}
+		if packageFile.Size >= 150*MB {
+			fmt.Println("OVERSIZE")
+			return "Your file exceeds 150 mb, please contact team for further instructions"
+		}
+		if package_url := db.UploadFile(packageFile, c, "/packages/free/"+a.Slug, ".xapp"); package_url != "" {
+			a.InitVersions(appVersion, uid, versionDescription, package_url)
+			a.IconURL = db.UploadImage(appIcon, c, "icons")
+			a.CoverURL = db.UploadImage(appCover, c, "covers")
+			pub.Update(a.AppId)
+			a.Release()
+			return ""
+		} else {
+			return "Internal error uploading package"
+		}
+	} else {
+		return "NP"
 	}
-	return true
+
 }

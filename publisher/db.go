@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 )
 
 func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
@@ -35,6 +36,7 @@ func VerifyPublisherOwnsApp(appid, userid string) bool {
 			}
 		}
 	}
+	log.Println(appid, userid)
 	return false
 }
 
