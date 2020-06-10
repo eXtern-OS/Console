@@ -210,31 +210,42 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="update">
-                                    <form>
+                                    <div class="alert alert-danger alert-dismissible" role="alert" {{.hidden}}>
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <div class="alert-icon">
+                                            <i class="icon-info"></i>
+                                        </div>
+                                        <div class="alert-message">
+                                            <span><strong>Error!</strong> {{.err_msg}}</span>
+                                        </div>
+                                    </div>
+                                    <form action="/pushUpdate" method="post">
+
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Version index</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" value="" placeholder="e.g. 2.2.3a">
+                                                <input class="form-control" type="text" name="vindex" value="" placeholder="e.g. 2.2.3a">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label">Update description</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="text" value="Fixed some bugs, added more" >
+                                                <input class="form-control" type="text" name="vdesc" value="Fixed some bugs, added more" >
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label form-control-label">Update path</label>
+                                            <label class="col-lg-3 col-form-label form-control-label">Upload updated</label>
                                             <div class="col-lg-9">
-                                                <input class="form-control" type="{{.update_type}}">
+                                                <input class="form-control" type="file" name="vup">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label form-control-label"></label>
                                             <div class="col-lg-9">
+                                                <input type="hidden" name="appId" value="{{.appId}}">
                                                 <input type="reset" class="btn btn-secondary" value="Cancel">
-                                                <input type="button" class="btn btn-primary" value="Save Changes">
+                                                <input type="submit" class="btn btn-primary" value="Save Changes">
                                             </div>
                                         </div>
                                     </form>

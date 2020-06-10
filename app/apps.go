@@ -77,3 +77,15 @@ func CreateFreeApp(name, description, package_url, screenshots, app_version, ver
 	}
 
 }
+
+func NewUpdate(uid, appId, vIndex, vDesc string, vUp *multipart.FileHeader, c *gin.Context) bool {
+	if t, app := GetAppByID(appId); t {
+		if t, p := publisher.GetPublisherByUID(uid); t {
+			var vr VersionRecord
+			vr.AppId = appId
+			vr.Version = vIndex
+			vr.PackageURL = db.UploadFile(vUp, c, app.Slug)
+		}
+	}
+	return true
+}

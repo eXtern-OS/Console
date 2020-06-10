@@ -137,7 +137,7 @@ func main() {
 		}
 		if cid, err := c.Cookie("devid"); err == nil {
 			if t, uid := auth.AuthenticateCookie(cid); t {
-				c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid))
+				c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid, ""))
 				return
 			}
 		}
@@ -281,6 +281,31 @@ func main() {
 		c.Redirect(http.StatusFound, "/login")
 		c.Abort()
 		return
+	})
+
+	r.POST("/pushUpdate", func(c *gin.Context) {
+		if cid, err := c.Cookie("deviud"); err == nil {
+			if t, uid := auth.AuthenticateCookie(cid); t {
+				appId := c.PostForm("appId")
+				vIndex := c.PostForm("vindex")
+				vDesc := c.PostForm("vdesc")
+				vUp, errU := c.FormFile("vup")
+				if errU != nil {
+					c.HTML(http.StatusOK, "app.html", web.RenderApplicationPage(appId, uid, "Error processing file"))
+					c.Abort()
+					return
+				}
+				if publisher.VerifyPublisherOwnsApp(appId, uid) {
+					if app.NewUpdate(uid, appId, vIndex, vDesc, vUp, c) {
+
+					}
+				}
+			}
+		} else {
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+			c.Abort()
+			return
+		}
 	})
 
 	r.Run()

@@ -86,14 +86,18 @@ func RenderIndex(uid string) gin.H {
 	}
 }
 
-func RenderApplicationPage(appId, uid string) gin.H {
+func RenderApplicationPage(appId, uid, errMsg string) gin.H {
 	var wg sync.WaitGroup
 
+	var hidden string
 	var acc Account
 	var ase AppStatsExported
 	wg.Add(2)
 	go acc.Load(uid, &wg)
 	go ase.Load(appId, uid, &wg)
+	if errMsg != "" {
+		hidden = "hidden"
+	}
 	wg.Wait()
 
 	return gin.H{
@@ -109,6 +113,8 @@ func RenderApplicationPage(appId, uid string) gin.H {
 		"total_app_comments":  ase.AppComments,
 		"top_app_country":     ase.ExportedCountry,
 		"update_type":         ase.UpdateType,
+		"hidden":              hidden,
+		"err_msg":             errMsg,
 	}
 }
 
