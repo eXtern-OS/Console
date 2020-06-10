@@ -218,7 +218,11 @@ func (apt *AppTable) Load(uid string) {
 			for _, a := range apps {
 				if t, apx := app.GetAppByID(a); t {
 					var ate AppTableElement
-					ate.AppName = apx.Name
+					review := ""
+					if apx.Status != "" {
+						review = " (on review)"
+					}
+					ate.AppName = apx.Name + review
 					ate.IconUrl = apx.IconURL
 					ate.DownloadsCount = strconv.Itoa(apx.Downloads)
 					ate.LastUpdate = apx.Version.CurrentVersion.Version
