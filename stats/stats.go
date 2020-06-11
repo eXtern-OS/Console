@@ -5,7 +5,6 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 )
-import "../db"
 
 type CountryRec map[string]int
 
@@ -56,7 +55,7 @@ type AppAdditionalStats struct {
 
 func (aas *AppAdditionalStats) Load(appid, uid string) {
 	if publisher.VerifyPublisherOwnsApp(appid, uid) {
-		if t, coll := db.NewDatabaseCollection("stats", "additional"); t {
+		if t, coll := NewDBCollection("additional"); t {
 			var res AppAdditionalStats
 			filter := bson.M{"app_id": appid}
 			if err := coll.FindOne(context.Background(), filter).Decode(&res); err == nil {

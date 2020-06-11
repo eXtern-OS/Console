@@ -8,10 +8,6 @@ import (
 
 var C CookiesManager
 
-func Init() {
-	C.LoadCookiesManager()
-}
-
 func AuthenticateCookie(cookieID string) (bool, string) {
 	return C.Load(cookieID)
 }

@@ -1,16 +1,60 @@
 package publisher
 
 import (
-	"../db"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"sync"
+	"time"
 )
 
+var Client DBConn
+var URI string
+
+func Init(mongouri string) {
+	URI = mongouri
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
+type DBConn struct {
+	Mutex  sync.Mutex
+	Client *mongo.Client
+}
+
+func (c *DBConn) Reload() {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
 func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
-	return db.NewDatabaseCollection("dev", collectionName)
+	Client.Mutex.Lock()
+	collection := Client.Client.Database("dev").Collection(collectionName)
+	Client.Mutex.Unlock()
+	return true, collection
 }
 
 //User's id
@@ -41,7 +85,7 @@ func VerifyPublisherOwnsApp(appid, userid string) bool {
 }
 
 func GetAppIds(uid string) (bool, []string) {
-	if t, c := db.NewDBCollection("publishers"); t {
+	if t, c := NewDBCollection("publishers"); t {
 		filter := bson.M{
 			"maintainers_uids": uid,
 		}

@@ -1,17 +1,66 @@
 package stats
 
 import (
-	"../db"
 	"../utils"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"sort"
+	"sync"
 	"time"
 )
 
+var Client DBConn
+var URI string
+
+func Init(mongouri string) {
+	URI = mongouri
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
+type DBConn struct {
+	Mutex  sync.Mutex
+	Client *mongo.Client
+}
+
+func (c *DBConn) Reload() {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
+func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
+	Client.Mutex.Lock()
+	collection := Client.Client.Database("stats").Collection(collectionName)
+	Client.Mutex.Unlock()
+	return true, collection
+}
+
 func GetCompanyStatsByID(publisherId string) (bool, CompanyStats) {
-	if t, coll := db.NewDatabaseCollection("stats", "company"); t {
+	if t, coll := NewDBCollection("company"); t {
 		var res CompanyStats
 		filter := bson.M{"pub_id": publisherId}
 		if err := coll.FindOne(context.Background(), filter).Decode(&res); err == nil {

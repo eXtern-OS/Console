@@ -242,5 +242,27 @@ func (apt *AppTable) Load(uid string) {
 	}
 
 	return
+}
 
+//Exported publisher
+type EP struct {
+	Name         string
+	Email        string
+	Address      string
+	Website      string
+	CompanyIcon  string
+	CompanyCover string
+}
+
+func (ep *EP) Load(uid string, wg *sync.WaitGroup) {
+	if t, pub := publisher.GetPublisherByUID(uid); t {
+		ep.Name = pub.DisplayName
+		ep.Website = pub.Website
+		ep.Email = pub.Email
+		ep.Address = pub.Address
+		ep.CompanyIcon = pub.ProfileIcon
+		ep.CompanyCover = pub.CoverImage
+	}
+	wg.Done()
+	return
 }

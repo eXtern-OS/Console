@@ -1,14 +1,17 @@
 package auth
 
 import (
-	"../db"
 	"../utils"
 	"context"
 	"fmt"
 	"github.com/eXtern-OS/AMS"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"sync"
+	"time"
 )
 
 type DevToken struct {
@@ -16,8 +19,57 @@ type DevToken struct {
 	UID string `json:"uid"`
 }
 
+var Client DBConn
+var URI string
+
+func Init(mongouri string) {
+	URI = mongouri
+
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+
+	C.LoadCookiesManager()
+}
+
+type DBConn struct {
+	Mutex  sync.Mutex
+	Client *mongo.Client
+}
+
+func (c *DBConn) Reload() {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
+func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
+	Client.Mutex.Lock()
+	collection := Client.Client.Database("Users").Collection(collectionName)
+	Client.Mutex.Unlock()
+	return true, collection
+}
+
 func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
-	if t, c := db.NewDatabaseCollection("Users", "accounts"); t {
+	if t, c := NewDBCollection("accounts"); t {
 		hash := utils.Makehash(password)
 
 		filter := bson.M{"email": login, "password": hash}
@@ -37,7 +89,7 @@ func GetUserIdByEmailAndPassword(login, password string) (bool, string) {
 }
 
 func (c *CookiesManager) LoadCookiesManager() {
-	if t, collection := db.NewDBCollection("cookies"); t {
+	if t, collection := NewDBCollection("cookies"); t {
 		filter := bson.M{"index": 0}
 
 		var result ExportedManager
@@ -56,7 +108,7 @@ func (c *CookiesManager) LoadCookiesManager() {
 }
 
 func (ex *ExportedManager) Dump() {
-	if t, collection := db.NewDBCollection("cookies"); t {
+	if t, collection := NewDBCollection("cookies"); t {
 		if _, err := collection.InsertOne(context.Background(), ex); err == nil {
 			return
 		} else {

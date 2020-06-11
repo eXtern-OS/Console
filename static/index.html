@@ -37,7 +37,7 @@
   <!--Start sidebar-wrapper-->
    <div id="sidebar-wrapper" data-simplebar="" data-simplebar-auto-hide="true">
      <div class="brand-logo">
-      <a href="index.html">
+      <a href="/">
        <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
        <h5 class="logo-text">Developer's console</h5>
      </a>
@@ -52,12 +52,12 @@
 
       <li>
         <a href="/newApp">
-          <i class="zmdi zmdi-invert-colors"></i> <span>Create applications</span>
+          <i class="zmdi zmdi-book"></i> <span>Create application</span>
         </a>
       </li>
 
       <li>
-        <a href="forms.html">
+        <a href="/company">
           <i class="zmdi zmdi-format-list-bulleted"></i> <span>Company profile</span>
         </a>
       </li>
@@ -96,7 +96,7 @@
            </div>
           </a>
         </li>
-        <li class="dropdown-item" href="/"><i class="icon-settings mr-2" href="/"></i> <a href="/">Company profile</a></li>
+        <li class="dropdown-item" href="/company"><i class="icon-settings mr-2" href="/company"></i> <a href="/company">Company profile</a></li>
         <li class="dropdown-divider"></li>
           <li class="dropdown-item" href="/logout"><i class="icon-power mr-2" href="/logout"></i><a href="/logout">Logout</a></li>
       </ul>
@@ -118,7 +118,7 @@
         <div class="row row-group m-0">
             <div class="col-12 col-lg-6 col-xl-3 border-light">
                 <div class="card-body">
-                  <h5 class="text-white mb-0">{{.total_downloads}} <span class="float-right"><i class="fa fa-shopping-cart"></i></span></h5>
+                  <h5 class="text-white mb-0">{{.total_downloads}} <span class="float-right"><i class="fa fa-download"></i></span></h5>
                     <div class="progress my-3" style="height:3px;">
                        <div class="progress-bar" style="width:{{.total_downloads_width}}%"></div>
                     </div>
@@ -145,7 +145,7 @@
             </div>
             <div class="col-12 col-lg-6 col-xl-3 border-light">
                 <div class="card-body">
-                  <h5 class="text-white mb-0">{{.total_comments}} <span class="float-right"><i class="fa fa-envira"></i></span></h5>
+                  <h5 class="text-white mb-0">{{.total_comments}} <span class="float-right"><i class="fa fa-comment"></i></span></h5>
                     <div class="progress my-3" style="height:3px;">
                        <div class="progress-bar" style="width:{{.total_comments_width}}%"></div>
                     </div>

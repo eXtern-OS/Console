@@ -1,11 +1,14 @@
 package publisher
 
 import (
+	"../db"
 	"../utils"
 	"context"
 	beatrix "github.com/eXtern-OS/Beatrix"
+	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"mime/multipart"
 	"strconv"
 	"time"
 )
@@ -20,6 +23,9 @@ type Publisher struct {
 	Verified        bool     `bson:"verified"         json:"verified"`
 	UID             string   `bson:"uid"              json:"uid"`
 	Apps            []string `bson:"apps"             json:"apps"`
+
+	ProfileIcon string `bson:"profile_icon"     json:"profile_icon" `
+	CoverImage  string `bson:"cover_image"      json:"cover_image" `
 }
 
 func Create(tname, turl, taddr, tmail, uid string) {
@@ -59,4 +65,48 @@ func (p *Publisher) Update(appId string) {
 		}
 	}
 	return
+}
+
+func (p *Publisher) PushInfoUpdate() string {
+	filter := bson.M{"uid": p.UID}
+	update := bson.M{"$set": p}
+	if t, c := NewDBCollection("publishers"); t {
+		if _, err := c.UpdateOne(context.Background(), filter, update); err == nil {
+			return ""
+		} else {
+			log.Println(err)
+			return "Internal error"
+		}
+	}
+	return "Internal error"
+}
+
+func CreateInfoUpdate(name, email, address, website, uid string, withIcon, withCover bool, icon, cover *multipart.FileHeader, c *gin.Context) string {
+	if t, p := GetPublisherByUID(uid); t {
+		if name != "" {
+			p.DisplayName = name
+		}
+		if email != "" {
+			p.DisplayName = name
+		}
+		if address != "" {
+			p.DisplayName = name
+		}
+		if website != "" {
+			p.DisplayName = name
+		}
+		if withIcon {
+			if resp := db.UploadFile(icon, c, "/pictures/icons", ".png"); resp != "" {
+				p.ProfileIcon = resp
+			}
+		}
+		if withCover {
+			if resp := db.UploadFile(cover, c, "/pictures/covers", ".png"); resp != "" {
+				p.CoverImage = resp
+			}
+		}
+		return p.PushInfoUpdate()
+	} else {
+		return "NP"
+	}
 }

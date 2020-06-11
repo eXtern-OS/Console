@@ -1,17 +1,61 @@
 package app
 
 import (
-	"../db"
 	"context"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"net/http"
+	"sync"
+	"time"
 )
 
+var Client DBConn
+var URI string
+
+func Init(mongouri string) {
+	URI = mongouri
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
+type DBConn struct {
+	Mutex  sync.Mutex
+	Client *mongo.Client
+}
+
+func (c *DBConn) Reload() {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Client.Mutex.Lock()
+	Client.Client = client
+	Client.Mutex.Unlock()
+}
+
 func NewDBCollection(collectionName string) (bool, *mongo.Collection) {
-	return db.NewDatabaseCollection("AppStore", collectionName)
+	Client.Mutex.Lock()
+	collection := Client.Client.Database("AppStore").Collection(collectionName)
+	Client.Mutex.Unlock()
+	return true, collection
 }
 
 func GetPaidAppURL(id string) (int, string, string) {

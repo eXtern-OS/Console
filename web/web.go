@@ -7,6 +7,8 @@ import (
 	"sync"
 )
 
+var ServerName string
+
 func RenderIndex(uid string) gin.H {
 	var wg sync.WaitGroup
 
@@ -103,7 +105,7 @@ func RenderApplicationPage(appId, uid, errMsg string) gin.H {
 	return gin.H{
 		"name":                acc.Name,
 		"email":               acc.Email,
-		"profile_url":         acc.PicURL,
+		"profile_url":         renderIcon(acc.PicURL),
 		"app_name":            ase.AppName,
 		"app_description":     ase.AppDescription,
 		"app_rating":          ase.AppRating,
@@ -148,5 +150,32 @@ func RenderNewApplication(uid, errMsgFree, errMsgPaid string) gin.H {
 		"err_msg_free": errMsgFree,
 		"hidden_paid":  hiddenPaid,
 		"err_msg_paid": errMsgPaid,
+	}
+}
+
+func RenderCompanyPage(uid, errMsg string) gin.H {
+	var acc Account
+	var ep EP
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go acc.Load(uid, &wg)
+	go ep.Load(uid, &wg)
+	var hidden = "hidden"
+	if errMsg != "" {
+		hidden = ""
+	}
+	wg.Wait()
+	return gin.H{
+		"name":            acc.Name,
+		"email":           acc.Email,
+		"profile_url":     acc.PicURL,
+		"hidden":          hidden,
+		"err_msg":         errMsg,
+		"company_name":    ep.Name,
+		"company_email":   ep.Email,
+		"company_address": ep.Address,
+		"company_website": ep.Website,
+		"company_avatar":  renderIcon(ep.CompanyIcon),
+		"company_cover":   renderCover(ep.CompanyCover),
 	}
 }
