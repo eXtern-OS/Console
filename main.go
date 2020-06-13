@@ -59,5 +59,5 @@ func main() {
 	r.Static("/api/images/icons", "/pictures/icons")
 	r.Static("/api/images/covers", "/pictures/covers")
 
-	r.Run()
+	r.Run(":80")
 }
