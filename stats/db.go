@@ -1,8 +1,8 @@
 package stats
 
 import (
-	"../utils"
 	"context"
+	"externos.io/console/utils"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

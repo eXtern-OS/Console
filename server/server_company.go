@@ -1,13 +1,13 @@
 package server
 
 import (
-	"../publisher"
-	"../web"
+	"externos.io/console/publisher"
+	"externos.io/console/web"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
-import "../auth"
+import "externos.io/console/auth"
 
 func SetCompany(r *gin.Engine) {
 	r.GET("/company", func(c *gin.Context) {

@@ -1,10 +1,10 @@
 package app
 
 import (
-	"../db"
-	"../payment"
-	"../publisher"
-	"../utils"
+	"externos.io/console/db"
+	"externos.io/console/payment"
+	"externos.io/console/publisher"
+	"externos.io/console/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"

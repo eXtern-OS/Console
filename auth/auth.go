@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"../utils"
+	"externos.io/console/utils"
 	"strconv"
 	"time"
 )

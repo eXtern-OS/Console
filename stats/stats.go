@@ -1,8 +1,8 @@
 package stats
 
 import (
-	"../publisher"
 	"context"
+	"externos.io/console/publisher"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

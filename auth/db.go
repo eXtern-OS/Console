@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"../utils"
 	"context"
+	"externos.io/console/utils"
 	"fmt"
 	"github.com/eXtern-OS/AMS"
 	beatrix "github.com/eXtern-OS/Beatrix"

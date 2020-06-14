@@ -507,7 +507,7 @@
         const table = document.getElementById("appTable");
 
         //You can call it like:
-        getData("http://localhost:8080/apps",function (data) {
+        getData("http://console.developer.externos.io/apps",function (data) {
             console.log(data)
             data["apps"].forEach(function(item, index){
                 let row = table.insertRow();

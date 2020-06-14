@@ -1,10 +1,10 @@
 package web
 
 import (
-	"../app"
-	"../publisher"
-	"../stats"
-	"../utils"
+	"externos.io/console/app"
+	"externos.io/console/publisher"
+	"externos.io/console/stats"
+	"externos.io/console/utils"
 	"fmt"
 	"github.com/eXtern-OS/AMS"
 	"log"

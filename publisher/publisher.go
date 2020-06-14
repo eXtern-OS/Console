@@ -1,9 +1,9 @@
 package publisher
 
 import (
-	"../db"
-	"../utils"
 	"context"
+	"externos.io/console/db"
+	"externos.io/console/utils"
 	beatrix "github.com/eXtern-OS/Beatrix"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"

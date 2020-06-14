@@ -1,8 +1,8 @@
 package app
 
 import (
-	"../db"
-	"../publisher"
+	"externos.io/console/db"
+	"externos.io/console/publisher"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 )

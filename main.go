@@ -1,14 +1,14 @@
 package main
 
 import (
-	"./app"
-	"./auth"
-	"./db"
-	"./publisher"
-	"./server"
-	"./stats"
-	"./web"
 	"encoding/json"
+	"externos.io/console/app"
+	"externos.io/console/auth"
+	"externos.io/console/db"
+	"externos.io/console/publisher"
+	"externos.io/console/server"
+	"externos.io/console/stats"
+	"externos.io/console/web"
 	"fmt"
 	"github.com/eXtern-OS/AMS"
 	beatrix "github.com/eXtern-OS/Beatrix"
@@ -53,7 +53,7 @@ func main() {
 	Init(r, config)
 
 	r.LoadHTMLGlob("static/*.html")
-	r.Static("/assets", "./static/assets")
+	r.Static("/assets", "externos.io/console/static/assets")
 
 	// Those are needed paths for app icons and covers
 	r.Static("/api/images/icons", "/pictures/icons")

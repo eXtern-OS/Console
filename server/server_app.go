@@ -1,10 +1,10 @@
 package server
 
 import (
-	"../app"
-	"../auth"
-	"../publisher"
-	"../web"
+	"externos.io/console/app"
+	"externos.io/console/auth"
+	"externos.io/console/publisher"
+	"externos.io/console/web"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"

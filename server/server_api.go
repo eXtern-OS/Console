@@ -1,8 +1,8 @@
 package server
 
 import (
-	"../auth"
-	"../web"
+	"externos.io/console/auth"
+	"externos.io/console/web"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

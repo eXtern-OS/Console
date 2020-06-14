@@ -1,6 +1,6 @@
 package app
 
-import "../review"
+import "externos.io/console/review"
 
 func (a *Application) MakeExported() ExportedApplication {
 	var ea ExportedApplication

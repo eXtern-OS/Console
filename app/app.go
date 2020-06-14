@@ -1,9 +1,9 @@
 package app
 
 import (
-	"../payment"
-	"../publisher"
-	"../review"
+	"externos.io/console/payment"
+	"externos.io/console/publisher"
+	"externos.io/console/review"
 )
 
 type Application struct {
