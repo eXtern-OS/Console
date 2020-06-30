@@ -53,7 +53,7 @@ func main() {
 	Init(r, config)
 
 	r.LoadHTMLGlob("static/*.html")
-	r.Static("/assets", "externos.io/console/static/assets")
+	r.Static("/assets", "./static/assets")
 
 	// Those are needed paths for app icons and covers
 	r.Static("/api/images/icons", "/pictures/icons")
