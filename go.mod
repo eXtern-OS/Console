@@ -10,12 +10,11 @@ require (
 	github.com/eXtern-OS/TokenMaster v0.0.0-20200605102736-10ca27ff5a1c // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-ini/ini v1.60.0 // indirect
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/masci/flickr v0.0.0-20161216033441-3cc496dc15cd
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	go.mongodb.org/mongo-driver v1.3.4
+	go.mongodb.org/mongo-driver v1.5.1
 	gopkg.in/ini.v1 v1.60.0 // indirect
 	gopkg.in/masci/flickr.v2 v2.0.0-20161216033441-3cc496dc15cd // indirect
 )
